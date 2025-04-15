@@ -1,3 +1,4 @@
+from ursina import Entity
 
 colors = ['red','blue','green','yellow']
 numbers = [1,2,3,4,5,6,7,8,9]
@@ -14,6 +15,11 @@ class Tile:
         self.number = number
         self.figure = figure
         self.position = position #to jest vector pozycji
+        self.entity = Entity(
+            model='models/kafelek_basic.obj',
+            position=(0,0,0),
+            scale=0.5
+        )
 
     def __str__(self):
         return f"{self.color}, {self.number}, {self.figure}\n{self.position}"
