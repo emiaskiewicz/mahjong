@@ -1,7 +1,6 @@
-from ursina import Entity
 
 colors = ['red','blue','green','yellow']
-numbers = [1,2,3,4,5,6,7,8,9]
+numbers = ['1','2','3','4','5','6','7','8','9']
 figures = ['dot 1','dot 2','dot 3','dot 4','dot 5','dot 6','dot 7','dot 8','dot 9',
            'bamboo 1','bamboo 2','bamboo 3','bamboo 4','bamboo 5','bamboo 6','bamboo 7','bamboo 8','bamboo 9',
            'character 1','character 2','character 3','character 4','character 5','character 6','character 7','character 8','character 9',
@@ -15,11 +14,7 @@ class Tile:
         self.number = number
         self.figure = figure
         self.position = position #to jest vector pozycji
-        self.entity = Entity(
-            model='models/kafelek_basic.obj',
-            position=(0,0,0),
-            scale=0.5
-        )
+
 
     def __str__(self):
         return f"{self.color}, {self.number}, {self.figure}\n{self.position}"
