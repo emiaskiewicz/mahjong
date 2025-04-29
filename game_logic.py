@@ -14,3 +14,9 @@ def takeTiles():
 
 def isAvaliable():
     pass
+
+def hint():
+    pass
+
+def solve():
+    pass

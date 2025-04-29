@@ -7,13 +7,15 @@ from ursina import *
 
 #app = Ursina()
 
-test_tile= Tile('blue','1','bamboo 9',Vector(0,0,0))
+test_tile= Tile('blue','dot 7',Vector(0,0,0))
 
 #app.run()
 
 #funkcja do generowania wygladu kafelka
 #nie jest pelna - trzeba dodac obrazek numerka
 def generate_tile_image(tile):
+    #jesli juz istnieje plik to break zeby pominac
+
     color_img = Image.open(f"assets_images/colors/{tile.color}.png").convert("RGBA")
     figure_img = Image.open(f"assets_images/figures/{tile.figure}.png").convert("RGBA")
 
@@ -23,7 +25,7 @@ def generate_tile_image(tile):
     color_img.paste(figure_img, (x, y), figure_img)
 
 
-    out_path = "generated_tiles/" + tile.color + "_" + tile.figure + "_" + tile.number + ".png"
+    out_path = "generated_tiles/" + tile.color + "_" + tile.figure + ".png"
     color_img.save(out_path)
 
 
@@ -32,7 +34,7 @@ generate_tile_image(test_tile)
 '''def main():
     board = Board()
 
-    print(board.find_on_board(Vector(3,4,2)))
+    print(board.find_on_board(Vector(45,4,2)))
 
 
 main()'''

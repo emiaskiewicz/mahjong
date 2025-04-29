@@ -7,10 +7,9 @@ import pandas
 class Board:
     def __init__(self):
         self.tiles = []
-        df = pandas.read_json('C:\\Users\\emilk\\OneDrive\\Pulpit\\uklady.json', orient='values')
+        df = pandas.read_json(f"game_sets/uklady.json", orient='values')
         for pos in df['positions']:
             self.tiles.append(Tile(color=random.choice(colors),
-             number=random.choice(numbers),
              figure=random.choice(figures),
              position=Vector(pos[0],pos[1],pos[2])))
 
