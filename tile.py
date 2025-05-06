@@ -1,3 +1,4 @@
+from PIL import Image
 
 colors = ['red','blue','green','yellow']
 figures = ['dot 1','dot 2','dot 3','dot 4','dot 5','dot 6','dot 7','dot 8','dot 9',
@@ -17,6 +18,12 @@ class Tile:
     def __str__(self):
         return f"{self.color}, {self.figure}\n{self.position}"
 
+    def __eq__(self, other):
+        #to jest tylko dla identycznych jesli chce wprowadzic punktacje trzeba to zmienic
+        return self.position==other.position and self.color==other.color and self.figure == other.figure
+
+    def display(self): #wyswietlenie kafelka w grze
+        pass
 
 
 class Vector:
@@ -30,3 +37,17 @@ class Vector:
 
     def __str__(self):
         return f"x={self.x} y={self.y} z={self.z}"
+
+
+#funkcja do generowania wygladu kafelka
+def generate_tile_image(tile):
+
+    color_img = Image.open(f"assets_images/colors/{tile.color}.png").convert("RGBA")
+    figure_img = Image.open(f"assets_images/figures/{tile.figure}.png").convert("RGBA")
+
+    x = 341 - figure_img.width // 2 - 36
+    y = 438 - figure_img.height // 2 - 28
+    color_img.paste(figure_img, (x, y), figure_img)
+
+    out_path = "generated_tiles/" + tile.color + "_" + tile.figure + ".png"
+    color_img.save(out_path)

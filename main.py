@@ -1,36 +1,63 @@
-from PIL.ImageOps import scale
-from PIL import Image
+import pygame
+import sys
 
 from board import Board
 from tile import *
-from ursina import *
-
-#app = Ursina()
-
-test_tile= Tile('blue','dot 7',Vector(0,0,0))
-
-#app.run()
-
-#funkcja do generowania wygladu kafelka
-#nie jest pelna - trzeba dodac obrazek numerka
-def generate_tile_image(tile):
-    #jesli juz istnieje plik to break zeby pominac
-
-    color_img = Image.open(f"assets_images/colors/{tile.color}.png").convert("RGBA")
-    figure_img = Image.open(f"assets_images/figures/{tile.figure}.png").convert("RGBA")
-
-    #if tile.figure in ['bamboo 1','bamboo 2','bamboo 3', 'bamboo 4']:
-    x = 341 - figure_img.width // 2 - 36
-    y = 438 - figure_img.height // 2 - 28
-    color_img.paste(figure_img, (x, y), figure_img)
 
 
-    out_path = "generated_tiles/" + tile.color + "_" + tile.figure + ".png"
-    color_img.save(out_path)
+pygame.init()
+
+WIDTH, HEIGHT = 800, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Mahjong Start")
+
+font = pygame.font.SysFont('comicsansms', 48)
+clock = pygame.time.Clock()
+
+#print(pygame.font.get_fonts())
+
+def draw_text(text, font, color, surface, x, y):
+    txt = font.render(text, True, color)
+    rect = txt.get_rect(center=(x, y))
+    surface.blit(txt, rect)
+    return rect
+
+def main_menu():
+    while True:
+        screen.fill((30, 30, 60))
+        start_button = draw_text("Start", font, (255, 255, 255), screen, WIDTH//2, HEIGHT//2)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if start_button.collidepoint(event.pos):
+                    game_loop()
+
+        pygame.display.flip()
+        clock.tick(60)
+
+def game_loop():
+    while True:
+        screen.fill((60, 120, 90))  # tu bedzie gra
+
+        quit_button = draw_text("Quit", font, (255, 255, 255), screen, WIDTH//2, HEIGHT//2)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if quit_button.collidepoint(event.pos):
+                    sys.exit()
+
+        pygame.display.flip()
+        clock.tick(60)
+
+main_menu()
 
 
-
-generate_tile_image(test_tile)
 '''def main():
     board = Board()
 
