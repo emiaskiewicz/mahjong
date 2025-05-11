@@ -20,3 +20,6 @@ def hint():
 
 def solve():
     pass
+
+def game():
+    print(12421342345)
