@@ -16,7 +16,7 @@ class Board:
             self.tiles.append(Tile(color=random.choice(colors),
              figure=random.choice(figures),
              position=Vector(pos[0],pos[1],pos[2])))'''
-        with open(f"C:\\Users\\emilk\\OneDrive\\Pulpit\\git mahjong\\game_sets\\uklady.json",mode="r",encoding="utf-8") as file:
+        with open(f"game_sets\\uklady.json",mode="r",encoding="utf-8") as file:
             self.sets_data=json.load(file)
 
         for set in self.sets_data["sets"]:
