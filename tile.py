@@ -15,10 +15,16 @@ class Vector:
         self.z = z
 
     def __eq__(self, other):
-        return self.x == other.x and self.y == other.y and self.z == other.z
+        return (self.x,self.y,self.z)== (other.x,other.y,other.z)
 
     def __str__(self):
         return f"x={self.x} y={self.y} z={self.z}"
+
+    def __hash__(self):
+        return hash((self.x,self.y,self.z))
+
+    def __repr__(self):
+        return f"Vector({self.x},{self.y},{self.z})"
 
     def above(self):
         return Vector(self.x,self.y,self.z+1)
