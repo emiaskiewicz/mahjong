@@ -61,6 +61,20 @@ class Board:
         self.tiles_list = [t for t in self.tiles_list if t.position != pos]
         self.tiles_dict.pop(pos,None)
 
+    def get_available_tiles(self):
+        return [tile for tile in self.tiles_list if self.is_available(tile)]
+
+    def shuffle_tiles(self):
+        attributes = [(tile.color, tile.figure) for tile in self.tiles_list]
+        random.shuffle(attributes)
+
+        for tile, (color, figure) in zip(self.tiles_list, attributes):
+            tile.color = color
+            tile.figure = figure
+
+
+
+
 board = Board("Kopiec")
 
 #print(board.find_on_board(Vector(1, 30, 2)))
