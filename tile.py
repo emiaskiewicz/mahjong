@@ -47,11 +47,10 @@ class Tile:
     position=Vector(0,0,0)
     points = 0
 
-    def __init__(self, color, figure, position, points):
+    def __init__(self, color, figure, position):
         self.color = color
         self.figure = figure
         self.position = position #to jest vector pozycji
-        self.points = points
 
     def __str__(self):
         return f"{self.color}, {self.figure}\n{self.position}"
@@ -59,6 +58,9 @@ class Tile:
     def __eq__(self, other):
         #to jest tylko dla identycznych jesli chce wprowadzic punktacje trzeba to zmienic
         return self.position==other.position and self.color==other.color and self.figure == other.figure
+
+    def set_points(self):
+        pass
 
     def display(self): #wyswietlenie kafelka w grze
         pass
