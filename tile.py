@@ -20,6 +20,21 @@ class Vector:
     def __str__(self):
         return f"x={self.x} y={self.y} z={self.z}"
 
+    def above(self):
+        return Vector(self.x,self.y,self.z+1)
+
+    def left(self):
+        return Vector(self.x-1,self.y,self.z)
+
+    def right(self):
+        return Vector(self.x+1,self.y,self.z)
+
+    def up(self):
+        return Vector(self.x,self.y-1,self.z)
+
+    def down(self):
+        return Vector(self.x,self.y+1,self.z)
+
 class Tile:
     color=''
     figure=''
