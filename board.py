@@ -55,6 +55,12 @@ class Board:
 
         return free_sides >= 2
 
+    def take_off_board(self, tile: Tile):
+        pos = tile.position
+
+        self.tiles_list = [t for t in self.tiles_list if t.position != pos]
+        self.tiles_dict.pop(pos,None)
+
 board = Board("Kopiec")
 
 #print(board.find_on_board(Vector(1, 30, 2)))
