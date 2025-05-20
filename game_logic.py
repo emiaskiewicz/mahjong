@@ -1,3 +1,5 @@
+from itertools import combinations
+
 from board import *
 from tile import *
 
@@ -66,9 +68,27 @@ class GameLogic:
                     return True
         return False
 
+    def find_possible_moves(self, board: Board):
+        #wszystkie mozliwe kombinacje ruchow (2 lub 3 kafelki do zdjecia) -> zwraca liste dostepnych ruchow
+        accessible = board.get_available_tiles()
+        moves = []
 
-    def hint(self):
-        pass
+        for move in combinations(accessible,2):
+            if self.can_remove(list(move),board):
+                moves.append(list(move))
+
+        for move in combinations(accessible,3):
+            if self.can_remove(list(move),board):
+                moves.append(list(move))
+
+        return moves
+
+
+    def get_hint(self, board: Board):
+        moves = self.find_possible_moves(board)
+        if not moves:
+            return None
+        return random.choice(moves)
 
     def solve(self):
         pass
