@@ -1,16 +1,9 @@
-from ursina import *
+from board import *
+from tile import *
 
-def equalTiles():
-    pass
-
-def noMatchingTiles():
-    pass
-
-def shuffleBoard():
-    pass
-
-def takeTiles():
-    pass
+class GameLogic:
+    def __init__(self):
+        pass
 
     def matching_features(self,tiles: list[Tile]):
         #zwraca liste [ten_sam_kolor, ta_sama_figura] jako boolean
@@ -55,7 +48,7 @@ def takeTiles():
         return sum
 
     def remove_matching(self,tiles: list[Tile],board: Board):
-        #usuwa kafelki jesli to mozliwe zwraca ilosc punktow za ruch
+        #usuwa kafelki jesli to mozliwe, zwraca ilosc punktow za ruch
         if self.can_remove(tiles,board):
             for t in tiles:
                 board.take_off_board(t)
@@ -77,11 +70,8 @@ def takeTiles():
     def hint(self):
         pass
 
-def hint():
-    pass
+    def solve(self):
+        pass
 
-def solve():
-    pass
-
-def game():
-    print(12421342345)
+    def game(self):
+        board = Board("Kopiec")
