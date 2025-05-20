@@ -1,9 +1,12 @@
 from tile import *
 import random
+import os
+import sys
 import json
 import pandas
 import string
 
+game_sets_path = os.path.join("game_sets", "uklady.json")
 
 class Board:
     sets_data = None
@@ -11,7 +14,7 @@ class Board:
     tiles_list = []
 
     def __init__(self, set_name):
-        with open(f"game_sets\\uklady.json", mode="r", encoding="utf-8") as file:
+        with open(game_sets_path, mode="r", encoding="utf-8") as file:
             self.sets_data = json.load(file)
 
         for set in self.sets_data["sets"]:
@@ -21,8 +24,7 @@ class Board:
                     tile = Tile(
                         color=random.choice(colors),
                         figure=random.choice(figures),
-                        position=position,
-                        points=0
+                        position=position
                     )
                     self.tiles_dict[position] = tile
                     self.tiles_list.append(tile)
@@ -37,6 +39,7 @@ class Board:
         pos = tile.position  # current tile position
         #jesli nie istnieje dana pozycja
         if pos not in self.tiles_dict:
+            print(f"{tile} does not exist")
             return False
         #jesli nad obecnym kafelkiem istnieje kafelek to od razu False
         if pos.above() in self.tiles_dict:
@@ -78,6 +81,17 @@ class Board:
 board = Board("Kopiec")
 
 #print(board.find_on_board(Vector(1, 30, 2)))
-#testtile=Tile('red','dot 7',Vector(0,0,0),0)
+#test czy usuwanie dziala
+test1=board.tiles_dict[Vector(0,0,0)]
+test2=board.tiles_dict[Vector(1,0,0)]
+'''print(board.is_available(test1))
+print(board.is_available(test2))
+board.take_off_board(test1)
+print(board.is_available(test1))
+print(board.is_available(test2))'''
 
-#print(board.is_available(testtile))
+print(f"Test1:\n{test1}")
+print(f"Test2:\n{test2}")
+board.shuffle_tiles()
+print(f"Test1:\n{test1}")
+print(f"Test2:\n{test2}")
