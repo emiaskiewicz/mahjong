@@ -8,6 +8,15 @@ def get_screen_position(position,offset_x, offset_y):
     y = position.y * TILE_HEIGHT - position.z * Z_OFFSET_Y+offset_y
     return x, y
 
+def lighten_image(image,factor=1.5):
+    import pygame
+    image = image.convert_alpha()
+    image_array = pygame.surfarray.pixels3d(image)
+    image_array = image_array * factor
+    image_array = image_array.clip(0, 255)
+
+    return pygame.surfarray.make_surface(image_array)
+
 def draw_board(screen, board, highlited_tiles=[]):
     import pygame
 
@@ -26,4 +35,8 @@ def draw_board(screen, board, highlited_tiles=[]):
             continue
 
         screen_x, screen_y = get_screen_position(tile.position,offset_x,offset_y)
+
+        if tile.position in highlited_tiles:
+            tile_img = lighten_image(tile_img)
+
         screen.blit(tile_img, (screen_x, screen_y))
