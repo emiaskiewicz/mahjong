@@ -1,6 +1,8 @@
 from PIL import Image
 import os
 
+from PIL.EpsImagePlugin import split
+
 colors = ['red','blue','green','yellow']
 figures = ['dot 1','dot 2','dot 3','dot 4','dot 5','dot 6','dot 7','dot 8','dot 9',
            'bamboo 1','bamboo 2','bamboo 3','bamboo 4','bamboo 5','bamboo 6','bamboo 7','bamboo 8','bamboo 9',
@@ -8,8 +10,6 @@ figures = ['dot 1','dot 2','dot 3','dot 4','dot 5','dot 6','dot 7','dot 8','dot 
            'wind east','wind south','wind west','wind north',
            'dragon red','dragon green','dragon white'
            ]
-
-#'spring','summer','autumn','winter'
 
 class Vector:
     def __init__(self,x,y,z):
@@ -48,25 +48,36 @@ class Tile:
     color=''
     figure=''
     position=Vector(0,0,0)
-    points = 0
+    points = 3
 
-    def __init__(self, color, figure, position):
+    def __init__(self, color, figure, position: Vector):
         self.color = color
         self.figure = figure
         self.position = position #to jest vector pozycji
+        self.set_points()
 
     def __str__(self):
-        return f"{self.color}, {self.figure}\n{self.position}"
+        return f"{self.color}, {self.figure},\tposition: {self.position}, points: {self.points}"
 
     def __eq__(self, other):
         #to jest tylko dla identycznych jesli chce wprowadzic punktacje trzeba to zmienic
         return self.position==other.position and self.color==other.color and self.figure == other.figure
 
     def set_points(self):
-        pass
+        figure= self.figure.split(" ")
 
-    def display(self): #wyswietlenie kafelka w grze
-        pass
+        match figure[0]:
+            case "dot" | "bamboo" | "character":
+                self.points += 5
+            case "wind":
+                self.points+=7
+            case "dragon":
+                self.points+=10
+
+        if figure[1].isdigit():
+            self.points+=int(figure[1])
+        else:
+            self.points+=len(figure[1])
 
     def get_tile_name(self):
         return self.color + "_" + self.figure
