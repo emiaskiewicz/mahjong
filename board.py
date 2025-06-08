@@ -1,10 +1,7 @@
 from tile import *
 import random
 import os
-import sys
 import json
-import pandas
-import string
 
 game_sets_path = os.path.join("game_sets", "uklady.json")
 
@@ -26,6 +23,7 @@ class Board:
                         figure=random.choice(figures),
                         position=position
                     )
+                    generate_tile_image(tile)
                     self.tiles_dict[position] = tile
                     self.tiles_list.append(tile)
 
@@ -67,6 +65,17 @@ class Board:
     def get_available_tiles(self):
         return [tile for tile in self.tiles_list if self.is_available(tile)]
 
+    def get_board_size(self):
+        max_x= max([key.x for key in self.tiles_dict.keys()])
+        max_y= max([key.y for key in self.tiles_dict.keys()])
+
+        tile_size_x, tile_size_y=80,100
+
+        board_width = (max_x+1)*tile_size_x
+        board_height = (max_y+1)*tile_size_y
+
+        return board_width,board_height
+
     def shuffle_tiles(self):
         attributes = [(tile.color, tile.figure) for tile in self.tiles_list]
         random.shuffle(attributes)
@@ -78,20 +87,20 @@ class Board:
 
 
 
-board = Board("Kopiec")
+#board = Board("Kopiec")
 
 #print(board.find_on_board(Vector(1, 30, 2)))
 #test czy usuwanie dziala
-test1=board.tiles_dict[Vector(0,0,0)]
-test2=board.tiles_dict[Vector(1,0,0)]
+#test1=board.tiles_dict[Vector(0,0,0)]
+#test2=board.tiles_dict[Vector(1,0,0)]
 '''print(board.is_available(test1))
 print(board.is_available(test2))
 board.take_off_board(test1)
 print(board.is_available(test1))
 print(board.is_available(test2))'''
 
-print(f"Test1:\n{test1}")
-print(f"Test2:\n{test2}")
-board.shuffle_tiles()
-print(f"Test1:\n{test1}")
-print(f"Test2:\n{test2}")
+#print(f"Test1:\n{test1}")
+#print(f"Test2:\n{test2}")
+#board.shuffle_tiles()
+#print(f"Test1:\n{test1}")
+#print(f"Test2:\n{test2}")
