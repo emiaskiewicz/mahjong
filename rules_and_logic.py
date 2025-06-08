@@ -1,11 +1,32 @@
 from itertools import combinations
-
 from board import *
 from tile import *
+from display import draw_board
 
-class GameLogic:
-    def __init__(self):
-        pass
+class Logic:
+    board = Board("Kopiec")
+
+    def __init__(self,rules):
+        self.rules = rules
+
+    def run_game_loop(self, screen):
+        import pygame
+        running = True
+        clock = pygame.time.Clock()
+
+        while running:
+            screen.fill((30, 30, 30))
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+                # obsługa kliknięć itp. (opcjonalnie teraz)
+
+            draw_board(screen, self.board)
+            pygame.display.flip()
+            clock.tick(60)
+
 
     def matching_features(self,tiles: list[Tile]):
         #zwraca liste [ten_sam_kolor, ta_sama_figura] jako boolean
