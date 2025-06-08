@@ -1,22 +1,29 @@
 import os
 
 TILE_WIDTH, TILE_HEIGHT = 80, 100
-Z_OFFSET_X, Z_OFFSET_Y = 10, 10
+Z_OFFSET_X, Z_OFFSET_Y = 8, 5
 
-def get_screen_position(position):
-    x = position.x * TILE_WIDTH - position.z * Z_OFFSET_X
-    y = position.y * TILE_HEIGHT - position.z * Z_OFFSET_Y
+def get_screen_position(position,offset_x, offset_y):
+    x = position.x * TILE_WIDTH - position.z * Z_OFFSET_X+offset_x
+    y = position.y * TILE_HEIGHT - position.z * Z_OFFSET_Y+offset_y
     return x, y
 
 def draw_board(screen, board, highlited_tiles=[]):
     import pygame
+
+    screen_width, screen_height = screen.get_size()
+    board_width, board_height = board.get_board_size()
+
+    offset_x = (screen_width - board_width) // 2
+    offset_y = (screen_height - board_height) // 2
+
     for tile in board.tiles_list:
-        img_name= tile.color +"_"+ tile.figure +".png"
+        img_name= tile.get_tile_name()+".png"
         img_path = os.path.join("generated_tiles",img_name)
         try:
             tile_img = pygame.image.load(img_path).convert_alpha()
         except:
             continue
 
-        screen_x, screen_y = get_screen_position(tile.position)
+        screen_x, screen_y = get_screen_position(tile.position,offset_x,offset_y)
         screen.blit(tile_img, (screen_x, screen_y))
