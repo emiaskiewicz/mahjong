@@ -1,10 +1,11 @@
 from itertools import combinations
 from board import *
 from tile import *
-from display import draw_board
+from display import draw_board,handle_click
 
 class Logic:
     board = Board("Kopiec")
+    selected_tiles = []
 
     def __init__(self,rules):
         self.rules = rules
@@ -20,10 +21,15 @@ class Logic:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    handle_click(screen, self.board, mouse_pos,self.selected_tiles)
+                    for tile in self.selected_tiles:
+                        print(tile)
+                    print("\n")
 
                 # obsługa kliknięć itp. (opcjonalnie teraz)
-
-            draw_board(screen, self.board)
+            draw_board(screen, self.board,self.selected_tiles)
             pygame.display.flip()
             clock.tick(60)
 
@@ -79,7 +85,6 @@ class Logic:
         else:
             return 0
 
-
     def any_valid_moves(self, board: Board):
         #sprawdza czy istnieje poprawny ruch
         accessible = board.get_available_tiles()
@@ -104,7 +109,6 @@ class Logic:
 
         return moves
 
-
     def get_hint(self, board: Board):
         moves = self.find_possible_moves(board)
         if not moves:
@@ -113,6 +117,3 @@ class Logic:
 
     def solve(self):
         pass
-
-    def game(self):
-        board = Board("Kopiec")
