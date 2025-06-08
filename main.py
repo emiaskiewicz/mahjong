@@ -2,14 +2,14 @@ import pygame
 import sys
 import pygame_menu
 from pygame_menu import themes
-import game_logic
-from game_logic import *
+import rules_and_logic
 from tile import *
 
 
 pygame.init()
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1400, 900
+
 _volume = 100
 sets=[("Kopiec",1),("Odwrocony kopiec",2)]
 difficulties=[('easy','easy'),('normal','normal'),('hard','hard')]
@@ -19,7 +19,7 @@ pygame.display.set_caption("Mahjong Start")
 
 clock = pygame.time.Clock()
 
-'''tile=Tile('red','dot 7',Vector(0,0,0))
+'''tile=Tile('red','dragon green',Vector(0,0,0))
 generate_tile_image(tile)'''
 
 class Rules:
@@ -57,6 +57,10 @@ class Rules:
 
 rules=Rules()
 
+def start_game():
+    game = rules_and_logic.Logic("asd")
+    game.run_game_loop(screen)
+
 def start_game_menu():
     game_menu=pygame_menu.Menu('Select game options:',WIDTH,HEIGHT,theme=themes.THEME_GREEN)
     game_menu.add.text_input('Name: ', default='username', maxchar=20,onchange=rules.set_player_name)
@@ -65,34 +69,9 @@ def start_game_menu():
     game_menu.add.dropselect("Select game set: ",items=sets,onchange=rules.set_gameSet)
     game_data = game_menu.get_input_data()
     rules.save_rules(game_data)
-    game_menu.add.button('Start the game', game)
+    game_menu.add.button('Start the game', start_game)
 
-    '''game_menu.add.text_input('Name: ', default='username', maxchar=20)
-    game_menu.add.selector('Select mode: ', default=0, style='fancy', items=game_modes)
-    game_menu.add.selector('Select difficulty level: ', default=0, style='fancy', items=difficulties)
-    game_menu.add.dropselect("Select game set: ", items=sets)
-    game_menu.add.button('Start the game', game)
 
-    
-
-    for key in gameData.keys():
-        print(f"{key}\t:\t{gameData[key]}")'''
-
-    '''while True:
-        screen.fill((60, 120, 90))  # tu bedzie gra
-        
-        quit_button = draw_text("Quit", font, (255, 255, 255), screen, WIDTH//2, HEIGHT//2)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if quit_button.collidepoint(event.pos):
-                    sys.exit()
-
-        pygame.display.flip()
-        clock.tick(60)'''
     mainmenu._open(game_menu)
 
 def creators_menu():
