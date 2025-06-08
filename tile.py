@@ -68,6 +68,9 @@ class Tile:
     def display(self): #wyswietlenie kafelka w grze
         pass
 
+    def get_tile_name(self):
+        return self.color + "_" + self.figure
+
 
 
 #funkcja do generowania wygladu kafelka
@@ -80,7 +83,7 @@ def generate_tile_image(tile):
     x = 341 - figure_img.width // 2 - 36
     y = 438 - figure_img.height // 2 - 28
     color_img.paste(figure_img, (x, y), figure_img)
-    color_img = color_img.resize((120,150), Image.Resampling.LANCZOS)
+    color_img = color_img.resize((90,110), Image.Resampling.LANCZOS)
     out_name = tile.color + "_" + tile.figure + ".png"
     out_path = os.path.join("generated_tiles",out_name)
     color_img.save(out_path)
