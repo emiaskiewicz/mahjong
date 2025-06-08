@@ -17,6 +17,23 @@ def lighten_image(image,factor=1.5):
 
     return pygame.surfarray.make_surface(image_array)
 
+def handle_click(screen,board,pos,highlited_tiles):
+    screen_width, screen_height = screen.get_size()
+    board_width, board_height = board.get_board_size()
+
+    offset_x = (screen_width - board_width) // 2
+    offset_y = (screen_height - board_height) // 2
+
+    for tile in board.tiles_list:
+        screen_x, screen_y = get_screen_position(tile.position, offset_x, offset_y)
+
+        if screen_x <= pos[0] <= screen_x + TILE_WIDTH and screen_y <= pos[1] <= screen_y + TILE_HEIGHT:
+            if tile not in highlited_tiles and len(highlited_tiles)<3 and board.is_available(tile):
+                highlited_tiles.append(tile)
+            elif tile in highlited_tiles:
+                highlited_tiles.remove(tile)
+            return
+
 def draw_board(screen, board, highlited_tiles=[]):
     import pygame
 
@@ -36,7 +53,9 @@ def draw_board(screen, board, highlited_tiles=[]):
 
         screen_x, screen_y = get_screen_position(tile.position,offset_x,offset_y)
 
-        if tile.position in highlited_tiles:
-            tile_img = lighten_image(tile_img)
+        if len(highlited_tiles) >0:
+            if tile.position in [highlited_tile.position for highlited_tile in highlited_tiles]:
+                tile_img = lighten_image(tile_img)
+
 
         screen.blit(tile_img, (screen_x, screen_y))
