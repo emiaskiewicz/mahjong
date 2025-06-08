@@ -1,11 +1,14 @@
 from itertools import combinations
+from time import sleep
+
 from board import *
 from tile import *
-from display import draw_board,handle_click
+from display import draw_board,handle_click,end_game_message, draw_hint_button, draw_delete_button
 
 class Logic:
     board = Board("Kopiec")
     selected_tiles = []
+    hint_tiles =[]
 
     def __init__(self,rules):
         self.rules = rules
@@ -15,23 +18,81 @@ class Logic:
         running = True
         clock = pygame.time.Clock()
 
+
         while running:
             screen.fill((30, 30, 30))
+
+            hint_button_obj = draw_hint_button(screen)
+            delete_button_obj = draw_delete_button(screen)
+
+            if not self.any_valid_moves(self.board):
+                quit_button, shuffle_button = end_game_message(screen)
+
+                waiting_for_click = True
+                while waiting_for_click:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            running = False
+                            waiting_for_click = False
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
+                            mouse_pos = pygame.mouse.get_pos()
+                            if self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
+                                running = False
+                                waiting_for_click = False
+                            else:
+                                waiting_for_click = False
+
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
-                    handle_click(screen, self.board, mouse_pos,self.selected_tiles)
-                    for tile in self.selected_tiles:
-                        print(tile)
-                    print("\n")
+                    if self.handle_hint_click(mouse_pos, hint_button_obj):
+                        draw_board(screen, self.board, self.hint_tiles)
+                        pygame.display.flip()
+                        sleep(3)
+                    if self.handle_delete_click(mouse_pos,delete_button_obj):
+                        draw_board(screen,self.board,self.selected_tiles)
+                        pygame.display.flip()
+
+                    handle_click(screen, self.board, mouse_pos,self.selected_tiles,self)
 
                 # obsługa kliknięć itp. (opcjonalnie teraz)
+
             draw_board(screen, self.board,self.selected_tiles)
             pygame.display.flip()
             clock.tick(60)
+
+    def handle_end_game_click(self, pos, quit_button, shuffle_button, board):
+        if quit_button.collidepoint(pos):
+            return True
+        elif shuffle_button.collidepoint(pos):
+            board.shuffle_tiles()
+            return False
+        return False
+
+    def handle_hint_click(self, pos, hint_but):
+        if hint_but.collidepoint(pos):
+            hint = self.get_hint(self.board)
+            if hint:
+                self.hint_tiles.clear()
+                for tile in hint:
+                    self.hint_tiles.append(tile)
+                return True
+        return False
+
+    def handle_delete_click(self, pos, delete_but):
+        if delete_but.collidepoint(pos):
+            if len(self.selected_tiles) in (2, 3):
+                score = self.remove_matching(tiles=self.selected_tiles, board=self.board)
+                if score > 0:
+                    print(f"Punkty: {score}")
+                    self.selected_tiles.clear()
+                    return True
+                if score == 0:
+                    self.selected_tiles.clear()
+        return False
 
 
     def matching_features(self,tiles: list[Tile]):
@@ -58,7 +119,7 @@ class Logic:
             return False
         if not all(board.is_available(tile) for tile in tiles):
             return False
-        return any(self.matching_features(tiles))
+        return self.matching_features(tiles)[1]
 
     def score(self,tiles: list[Tile]):
         #oblicza punkty za pojedyncze zdjecie kafelkow
@@ -69,11 +130,11 @@ class Logic:
         for t in tiles:
             sum+=t.points
         if common[0] and common[1]:
-            sum*=5
+            sum*=5*len(tiles)
         elif common[0]:
-            sum*=2
+            sum*=2*len(tiles)
         elif common[1]:
-            sum *= 3
+            sum *= 3*len(tiles)
         return sum
 
     def remove_matching(self,tiles: list[Tile],board: Board):
