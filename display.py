@@ -1,19 +1,16 @@
 import os
 import pygame
-import random
 
+#kolory w notacji RGB
 BLACK = (0,0,0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-BUTTON_WIDTH, BUTTON_HEIGHT = 200, 50
-BUTTON_MARGIN = 20
-
+#wielkosc kafelka pomniejszona o 10 px aby nakladaly sie one na siebie przy wyswietlaniu plaszy
 TILE_WIDTH, TILE_HEIGHT = 60, 80
 Z_OFFSET_X, Z_OFFSET_Y = 6, 6
-
 
 
 def draw_hint_button(screen):
@@ -49,9 +46,10 @@ def draw_delete_button(screen):
     return delete_button
 
 def end_game_message(screen):
+    button_width, button_height = 200, 50
+    button_margin = 20
     font = pygame.font.Font(None, 36)
-    window_width = 400
-    window_height = 200
+    window_width, window_height= 400, 200
     window_x = (screen.get_width() - window_width) // 2
     window_y = (screen.get_height() - window_height) // 2
     screen.fill((30, 30, 30))
@@ -62,11 +60,11 @@ def end_game_message(screen):
     text = font.render("No moves available!", True, BLACK)
     screen.blit(text, (window_x + (window_width - text.get_width()) // 2, window_y + 20))
 
-    quit_button = pygame.Rect(window_x + (window_width-BUTTON_WIDTH)//2, window_y + window_height - BUTTON_MARGIN - BUTTON_HEIGHT,
-                              BUTTON_WIDTH, BUTTON_HEIGHT)
-    shuffle_button = pygame.Rect(window_x + (window_width - BUTTON_WIDTH) // 2,
-                                 window_y + window_height - 2 * BUTTON_MARGIN - 2 * BUTTON_HEIGHT, BUTTON_WIDTH,
-                                 BUTTON_HEIGHT)
+    quit_button = pygame.Rect(window_x + (window_width-button_width)//2, window_y + window_height - button_margin - button_height,
+                              button_width, button_height)
+    shuffle_button = pygame.Rect(window_x + (window_width - button_width) // 2,
+                                 window_y + window_height - 2 * button_margin - 2 * button_height, button_width,
+                                 button_height)
 
     pygame.draw.rect(screen, RED, quit_button)
     pygame.draw.rect(screen, GREEN, shuffle_button)
@@ -137,6 +135,5 @@ def draw_board(screen, board, highlited_tiles=[]):
         if len(highlited_tiles) >0:
             if tile.position in [highlited_tile.position for highlited_tile in highlited_tiles]:
                 tile_img = lighten_image(tile_img)
-
 
         screen.blit(tile_img, (screen_x, screen_y))

@@ -1,8 +1,7 @@
 from PIL import Image
 import os
 
-from PIL.EpsImagePlugin import split
-
+#wszystkie mozliwosci cech kafelkow
 colors = ['red','blue','green','yellow']
 figures = ['dot 1','dot 2','dot 3','dot 4','dot 5','dot 6','dot 7','dot 8','dot 9',
            'bamboo 1','bamboo 2','bamboo 3','bamboo 4','bamboo 5','bamboo 6','bamboo 7','bamboo 8','bamboo 9',
@@ -11,6 +10,7 @@ figures = ['dot 1','dot 2','dot 3','dot 4','dot 5','dot 6','dot 7','dot 8','dot 
            'dragon red','dragon green','dragon white'
            ]
 
+#klasa Vector - sluzy do przechowywania wspolrzednych kafelka
 class Vector:
     def __init__(self,x,y,z):
         self.x = x
@@ -29,6 +29,7 @@ class Vector:
     def __repr__(self):
         return f"Vector({self.x},{self.y},{self.z})"
 
+    #metody do sprawdzenia czy w ich otoczeniu sa inne kafelki
     def above(self):
         return Vector(self.x,self.y,self.z+1)
 
@@ -44,6 +45,7 @@ class Vector:
     def down(self):
         return Vector(self.x,self.y+1,self.z)
 
+#klasa Tile - przechowuje wszystkie informacje o danych kafelkach
 class Tile:
     color=''
     figure=''
@@ -54,15 +56,18 @@ class Tile:
         self.color = color
         self.figure = figure
         self.position = position #to jest vector pozycji
-        self.set_points()
+        self.set_points() #inicjalizacja punktacji kafelka na podstawie jego cech
 
     def __str__(self):
         return f"{self.color}, {self.figure},\tposition: {self.position}, points: {self.points}"
 
     def __eq__(self, other):
-        #to jest tylko dla identycznych jesli chce wprowadzic punktacje trzeba to zmienic
         return self.position==other.position and self.color==other.color and self.figure == other.figure
 
+    #metoda set_points, ktora na podstawie cech kafelka przypisuje im ilosc punktow,
+    #kafelek od razu ma przypisana wartosc punktowa 3 a dane figury moga ja zwiekszyc
+    #dodaje sie tez punkty na podstawie liczby w nazwie figury, a jesli jej
+    #nie ma to na podstawie dlugosci drugiego czlonu nazwy
     def set_points(self):
         figure= self.figure.split(" ")
 
@@ -77,14 +82,17 @@ class Tile:
         if figure[1].isdigit():
             self.points+=int(figure[1])
         else:
-            self.points+=len(figure[1])
+            self.points+=len(figure[1])*3
 
+    #metoda do pobrania nazwy kafelka na podstawie jego cech,
+    #ta sama nazwa jest wykorzystywana przy nazewnictwie plikow z grafikami kafelkow
     def get_tile_name(self):
         return self.color + "_" + self.figure
 
 
 
-#funkcja do generowania wygladu kafelka
+#funkcja do generowania wygladu kafelka,
+#pobiera czesciowe grafiki danych cech i sklada je w jedna grafike kafelka
 def generate_tile_image(tile):
     colors_image_path = os.path.join("assets_images","colors",tile.color)+".png"
     figures_image_path = os.path.join("assets_images","figures",tile.figure)+".png"
