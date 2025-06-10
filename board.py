@@ -16,16 +16,17 @@ class Board:
 
         for set in self.sets_data["sets"]:
             if set["name"] == set_name:
-                for pos in set["positions"]:
-                    position = Vector(pos[0], pos[1], pos[2])
-                    tile = Tile(
-                        color=get_random_color(),
-                        figure=get_random_figure(),
-                        position=position
-                    )
-                    generate_tile_image(tile)
-                    self.tiles_dict[position] = tile
-                    self.tiles_list.append(tile)
+                while len(self.get_available_tiles())==0:
+                    for pos in set["positions"]:
+                        position = Vector(pos[0], pos[1], pos[2])
+                        tile = Tile(
+                            color=get_random_color(),
+                            figure=get_random_figure(),
+                            position=position
+                        )
+                        generate_tile_image(tile)
+                        self.tiles_dict[position] = tile
+                        self.tiles_list.append(tile)
 
     def find_on_board(self, _position):
         if self.tiles_dict.get(Vector(_position.x, _position.y, _position.z)):
@@ -71,6 +72,8 @@ class Board:
         return [tile for tile in self.tiles_list if self.is_available(tile)]
 
     def get_board_size(self):
+        if len(self.tiles_list)==0:
+            return [0,0]
         max_x= max([key.x for key in self.tiles_dict.keys()])
         max_y= max([key.y for key in self.tiles_dict.keys()])
 
@@ -96,24 +99,3 @@ class Board:
         for tile, (color, figure) in zip(self.tiles_list, attributes):
             tile.color = color
             tile.figure = figure
-
-
-
-
-#board = Board("Kopiec")
-
-#print(board.find_on_board(Vector(1, 30, 2)))
-#test czy usuwanie dziala
-#test1=board.tiles_dict[Vector(0,0,0)]
-#test2=board.tiles_dict[Vector(1,0,0)]
-'''print(board.is_available(test1))
-print(board.is_available(test2))
-board.take_off_board(test1)
-print(board.is_available(test1))
-print(board.is_available(test2))'''
-
-#print(f"Test1:\n{test1}")
-#print(f"Test2:\n{test2}")
-#board.shuffle_tiles()
-#print(f"Test1:\n{test1}")
-#print(f"Test2:\n{test2}")
