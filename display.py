@@ -1,5 +1,6 @@
 import os
 import pygame
+from ursina.color import white
 
 #kolory w notacji RGB
 BLACK = (0,0,0)
@@ -28,6 +29,20 @@ def draw_hint_button(screen):
 
     return hint_button
 
+def no_hint_message(screen):
+    font = pygame.font.Font(None, 30)
+    button_width, button_height = 300, 100
+    button_x = (screen.get_width()-button_width) //2
+    button_y = (screen.get_height()-button_height) //2
+    message_rect = pygame.Rect(button_x, button_y, button_width, button_height)
+    pygame.draw.rect(screen, WHITE, message_rect)
+
+    text = font.render("Not enough points for a hint", True, BLACK)
+    screen.blit(text,(message_rect.x+(message_rect.width - text.get_width())//2,
+                      message_rect.y+(message_rect.height - text.get_height())//2))
+
+    return message_rect
+
 def draw_delete_button(screen):
     font = pygame.font.Font(None, 32)
     button_width = 100
@@ -46,7 +61,7 @@ def draw_delete_button(screen):
     return delete_button
 
 def end_game_message(screen):
-    button_width, button_height = 200, 50
+    button_width, button_height = 250, 50
     button_margin = 20
     font = pygame.font.Font(None, 36)
     window_width, window_height= 400, 200
@@ -69,7 +84,7 @@ def end_game_message(screen):
     pygame.draw.rect(screen, RED, quit_button)
     pygame.draw.rect(screen, GREEN, shuffle_button)
 
-    quit_text = font.render("Exit game", True, BLACK)
+    quit_text = font.render("Exit to main menu", True, BLACK)
     shuffle_text = font.render("Shuffle board", True, BLACK)
 
     screen.blit(quit_text, (quit_button.x + (quit_button.width - quit_text.get_width()) // 2,
