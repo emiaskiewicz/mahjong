@@ -20,7 +20,7 @@ class Board:
                     position = Vector(pos[0], pos[1], pos[2])
                     tile = Tile(
                         color=get_random_color(),
-                        figure=random.choice(figures),
+                        figure=get_random_figure(),
                         position=position
                     )
                     generate_tile_image(tile)
@@ -61,6 +61,11 @@ class Board:
 
         self.tiles_list = [t for t in self.tiles_list if t.position != pos]
         self.tiles_dict.pop(pos,None)
+        num_tiles = self.num_of_tiles()
+        for figure,val in num_tiles.items():
+            if val==1:
+                self.tiles_dict = {key: value for key, value in self.tiles_dict.items() if value.figure!=figure}
+                self.tiles_list = [tl for tl in self.tiles_list if tl.figure != figure]
 
     def get_available_tiles(self):
         return [tile for tile in self.tiles_list if self.is_available(tile)]
@@ -75,6 +80,14 @@ class Board:
         board_height = (max_y+1)*tile_size_y
 
         return board_width,board_height
+
+    def num_of_tiles(self):
+        num_tiles={}
+        for tile in self.tiles_list:
+            if tile.figure not in num_tiles:
+                num_tiles[tile.figure] = 0
+            num_tiles[tile.figure]+=1
+        return num_tiles
 
     def shuffle_tiles(self):
         attributes = [(tile.color, tile.figure) for tile in self.tiles_list]
