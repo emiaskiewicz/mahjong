@@ -9,7 +9,7 @@ pygame.init()
 WIDTH, HEIGHT = 1300, 700
 
 _volume = 100
-sets=[("Kopiec",1),("Odwrocony kopiec",2)]
+sets=[("Kopiec",1),("Odwrocony kopiec",2),("Test",3)]
 difficulties=[('easy','easy'),('normal','normal'),('hard','hard')]
 game_modes=[('Single player','Single player'),('vs Computer','vs Computer')]
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
