@@ -2,14 +2,16 @@ import random
 from PIL import Image
 import os
 
+from display import draw_board
+
 #wszystkie mozliwosci cech kafelkow
-colors = {'red': 0.1, 'blue':0.2, 'green':0.3, 'yellow':0.4}
-figures = ['dot 1','dot 2','dot 3','dot 4','dot 5','dot 6','dot 7','dot 8','dot 9',
-           'bamboo 1','bamboo 2','bamboo 3','bamboo 4','bamboo 5','bamboo 6','bamboo 7','bamboo 8','bamboo 9',
-            'character 1','character 2','character 3','character 4','character 5','character 6','character 7','character 8','character 9',
-           'wind east','wind south','wind west','wind north',
-           'dragon red','dragon green','dragon white'
-           ]
+colors = {'red': 0.1, 'blue': 0.2, 'green': 0.3, 'yellow': 0.4}
+dot_fig =['dot 1','dot 2','dot 3','dot 4','dot 5','dot 6','dot 7','dot 8','dot 9']
+bambooo_fig = ['bamboo 1','bamboo 2','bamboo 3','bamboo 4','bamboo 5','bamboo 6','bamboo 7','bamboo 8','bamboo 9']
+character_fig = ['character 1','character 2','character 3','character 4','character 5','character 6','character 7','character 8','character 9']
+wind_fig =['wind east','wind south','wind west','wind north']
+dragon_fig=['dragon red','dragon green','dragon white']
+
 
 #klasa Vector - sluzy do przechowywania wspolrzednych kafelka
 class Vector:
@@ -67,8 +69,6 @@ class Tile:
 
     #metoda set_points, ktora na podstawie cech kafelka przypisuje im ilosc punktow,
     #kafelek od razu ma przypisana wartosc punktowa 3 a dane figury moga ja zwiekszyc
-    #dodaje sie tez punkty na podstawie liczby w nazwie figury, a jesli jej
-    #nie ma to na podstawie dlugosci drugiego czlonu nazwy
     def set_points(self):
         figure= self.figure.split(" ")
 
@@ -80,15 +80,26 @@ class Tile:
             case "dragon":
                 self.points+=10
 
-        if figure[1].isdigit():
-            self.points+=int(figure[1])
-        else:
-            self.points+=len(figure[1])*3
-
     #metoda do pobrania nazwy kafelka na podstawie jego cech,
     #ta sama nazwa jest wykorzystywana przy nazewnictwie plikow z grafikami kafelkow
     def get_tile_name(self):
         return self.color + "_" + self.figure
+
+#funkcja generuje liste figur z ktorych beda wybierane do planszy,
+#sa z rozna iloscia - dot, bamboo i character beda losowane czesciej od
+#wind i dragon
+def generate_figures_list():
+    all_fig =[]
+    all_fig+=dot_fig*6
+    all_fig+=bambooo_fig*6
+    all_fig+=character_fig*6
+    all_fig+=wind_fig*2
+    all_fig+=dragon_fig*2
+    return all_fig
+
+def get_random_figure():
+    figures=generate_figures_list()
+    return random.choice(figures)
 
 def get_random_color():
     colors_list = list(colors.keys())
