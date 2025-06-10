@@ -8,7 +8,7 @@ from tile import *
 
 pygame.init()
 
-WIDTH, HEIGHT = 1400, 900
+WIDTH, HEIGHT = 1300, 700
 
 _volume = 100
 sets=[("Kopiec",1),("Odwrocony kopiec",2)]
