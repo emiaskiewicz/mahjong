@@ -69,7 +69,7 @@ class Board:
         max_x= max([key.x for key in self.tiles_dict.keys()])
         max_y= max([key.y for key in self.tiles_dict.keys()])
 
-        tile_size_x, tile_size_y=80,100
+        tile_size_x, tile_size_y=60,80
 
         board_width = (max_x+1)*tile_size_x
         board_height = (max_y+1)*tile_size_y

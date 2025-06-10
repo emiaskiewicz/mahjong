@@ -11,8 +11,8 @@ BLUE = (0, 0, 255)
 BUTTON_WIDTH, BUTTON_HEIGHT = 200, 50
 BUTTON_MARGIN = 20
 
-TILE_WIDTH, TILE_HEIGHT = 80, 100
-Z_OFFSET_X, Z_OFFSET_Y = 8, 8
+TILE_WIDTH, TILE_HEIGHT = 60, 80
+Z_OFFSET_X, Z_OFFSET_Y = 6, 6
 
 
 
@@ -42,7 +42,7 @@ def draw_delete_button(screen):
 
     pygame.draw.rect(screen, BLUE, delete_button)
 
-    delete_text = font.render("Delete", True, WHITE)
+    delete_text = font.render("Remove", True, WHITE)
     screen.blit(delete_text, (delete_button.x + (delete_button.width - delete_text.get_width()) // 2,
                             delete_button.y + (delete_button.height - delete_text.get_height()) // 2))
 
@@ -54,6 +54,7 @@ def end_game_message(screen):
     window_height = 200
     window_x = (screen.get_width() - window_width) // 2
     window_y = (screen.get_height() - window_height) // 2
+    screen.fill((30, 30, 30))
 
     pygame.draw.rect(screen, WHITE, (window_x, window_y, window_width, window_height))
     pygame.draw.rect(screen, BLACK, (window_x, window_y, window_width, window_height), 2)
