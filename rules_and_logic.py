@@ -1,17 +1,19 @@
 from itertools import combinations
 from time import sleep
 
+import pygame.font
+
 from board import *
 from tile import *
-from display import draw_board,handle_click,end_game_message, draw_hint_button, draw_delete_button
+from display import draw_board,handle_click,end_game_message, draw_hint_button, draw_delete_button, no_hint_message
 
 class Logic:
-    board = Board("Kopiec")
     selected_tiles = []
     hint_tiles =[]
 
-    def __init__(self,rules):
-        self.rules = rules
+    def __init__(self,player):
+        self.player = player
+        self.board = Board(player.get_gameSet())
 
     def run_game_loop(self, screen):
         import pygame
@@ -24,6 +26,10 @@ class Logic:
 
             hint_button_obj = draw_hint_button(screen)
             delete_button_obj = draw_delete_button(screen)
+
+            font = pygame.font.Font(None,36)
+            points_text=font.render(f'Score: {self.player.points}',True,(255,255,255))
+            screen.blit(points_text,(screen.get_width()-points_text.get_width()-15,15))
 
             if not self.any_valid_moves(self.board):
                 quit_button, shuffle_button = end_game_message(screen)
@@ -48,7 +54,7 @@ class Logic:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
-                    if self.handle_hint_click(mouse_pos, hint_button_obj):
+                    if self.handle_hint_click(mouse_pos, hint_button_obj,screen):
                         draw_board(screen, self.board, self.hint_tiles)
                         pygame.display.flip()
                         sleep(3)
@@ -66,16 +72,23 @@ class Logic:
 
     def handle_end_game_click(self, pos, quit_button, shuffle_button, board):
         if quit_button.collidepoint(pos):
+            from main import mainmenu
+            mainmenu._open()
             return True
         elif shuffle_button.collidepoint(pos):
             board.shuffle_tiles()
             return False
         return False
 
-    def handle_hint_click(self, pos, hint_but):
+    def handle_hint_click(self, pos, hint_but,screen):
         if hint_but.collidepoint(pos):
             hint = self.get_hint(self.board)
-            if hint:
+            if hint=="pts":
+                no_hint_message(screen)
+                pygame.display.flip()
+                sleep(4)
+                return True
+            elif hint:
                 self.hint_tiles.clear()
                 for tile in hint:
                     self.hint_tiles.append(tile)
@@ -88,12 +101,12 @@ class Logic:
                 score = self.remove_matching(tiles=self.selected_tiles, board=self.board)
                 if score > 0:
                     print(f"Punkty: {score}")
+                    self.player.add_points(score)
                     self.selected_tiles.clear()
                     return True
                 if score == 0:
                     self.selected_tiles.clear()
         return False
-
 
     def matching_features(self,tiles: list[Tile]):
         #zwraca liste [ten_sam_kolor, ta_sama_figura] jako boolean
@@ -134,6 +147,9 @@ class Logic:
             points_sum *= 2
         elif common[1]:
             points_sum *= 3
+
+        if tiles[0].color == 'white':
+            return points_sum
 
         color_counts = {}
         for tile in tiles:
@@ -192,6 +208,11 @@ class Logic:
         moves = self.find_possible_moves(board)
         if not moves:
             return None
+        if self.player.points < 100:
+            print("Not enough points for a hint")
+            return "pts"
+        else:
+            self.player.add_points(-100)
         return random.choice(moves)
 
     def solve(self):
