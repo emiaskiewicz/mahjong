@@ -19,7 +19,7 @@ class Board:
                 for pos in set["positions"]:
                     position = Vector(pos[0], pos[1], pos[2])
                     tile = Tile(
-                        color=random.choice(colors),
+                        color=get_random_color(),
                         figure=random.choice(figures),
                         position=position
                     )

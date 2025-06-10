@@ -1,8 +1,9 @@
+import random
 from PIL import Image
 import os
 
 #wszystkie mozliwosci cech kafelkow
-colors = ['red','blue','green','yellow']
+colors = {'red': 0.1, 'blue':0.2, 'green':0.3, 'yellow':0.4}
 figures = ['dot 1','dot 2','dot 3','dot 4','dot 5','dot 6','dot 7','dot 8','dot 9',
            'bamboo 1','bamboo 2','bamboo 3','bamboo 4','bamboo 5','bamboo 6','bamboo 7','bamboo 8','bamboo 9',
             'character 1','character 2','character 3','character 4','character 5','character 6','character 7','character 8','character 9',
@@ -89,7 +90,10 @@ class Tile:
     def get_tile_name(self):
         return self.color + "_" + self.figure
 
-
+def get_random_color():
+    colors_list = list(colors.keys())
+    weights_list = list(colors.values())
+    return random.choices(colors_list,weights=weights_list,k=1)[0]
 
 #funkcja do generowania wygladu kafelka,
 #pobiera czesciowe grafiki danych cech i sklada je w jedna grafike kafelka
