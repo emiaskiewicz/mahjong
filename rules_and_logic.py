@@ -1,11 +1,10 @@
 from itertools import combinations
 from time import sleep
-
 import pygame.font
-
 from board import *
 from tile import *
-from display import draw_board,handle_click,end_game_message, draw_hint_button, draw_delete_button, no_hint_message
+from display import (draw_board,handle_click,end_game_message, draw_hint_button,
+                     draw_delete_button, no_hint_message,game_win_screen)
 
 class Logic:
     selected_tiles = []
@@ -32,7 +31,13 @@ class Logic:
             screen.blit(points_text,(screen.get_width()-points_text.get_width()-15,15))
 
             if not self.any_valid_moves(self.board):
-                quit_button, shuffle_button = end_game_message(screen)
+                if self.board.get_board_size() == [0, 0]:
+                    menu_button, restart_button = game_win_screen(screen, self.player.points,
+                                                                  self.player.player_name)
+                elif self.board.get_board_size()!=[0,0] and len(self.board.tiles_list)==2:
+                    print("remis")
+                else:
+                    quit_button, shuffle_button = end_game_message(screen)
 
                 waiting_for_click = True
                 while waiting_for_click:
@@ -42,11 +47,15 @@ class Logic:
                             waiting_for_click = False
                         elif event.type == pygame.MOUSEBUTTONDOWN:
                             mouse_pos = pygame.mouse.get_pos()
-                            if self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
+                            if self.handle_win_screen_click(mouse_pos,menu_button,restart_button):
+                                running = False
+                                waiting_for_click = False
+                            elif self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
                                 running = False
                                 waiting_for_click = False
                             else:
                                 waiting_for_click = False
+                continue
 
 
             for event in pygame.event.get():
@@ -78,6 +87,17 @@ class Logic:
         elif shuffle_button.collidepoint(pos):
             board.shuffle_tiles()
             return False
+        return False
+
+    def handle_win_screen_click(self,pos, menu_button,restart_button):
+        if menu_button.collidepoint(pos):
+            from main import mainmenu
+            mainmenu._open()
+            return True
+        elif restart_button.collidepoint(pos):
+            self.player.reset_points()
+            #main.start_game_menu()
+            return True
         return False
 
     def handle_hint_click(self, pos, hint_but,screen):
