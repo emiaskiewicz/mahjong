@@ -124,18 +124,36 @@ class Logic:
     def score(self,tiles: list[Tile]):
         #oblicza punkty za pojedyncze zdjecie kafelkow
         common = self.matching_features(tiles)
-        sum = 0
         if not any(common):
-            return sum
-        for t in tiles:
-            sum+=t.points
+            return 0
+        points_sum = sum(tile.points for tile in tiles)
+
         if common[0] and common[1]:
-            sum*=5*len(tiles)
+            points_sum *= 5
         elif common[0]:
-            sum*=2*len(tiles)
+            points_sum *= 2
         elif common[1]:
-            sum *= 3*len(tiles)
-        return sum
+            points_sum *= 3
+
+        color_counts = {}
+        for tile in tiles:
+            if tile.color not in color_counts:
+                color_counts[tile.color] = 0
+            color_counts[tile.color] += 1
+
+        for color, count in color_counts.items():
+            if count >= 2:
+                if color == 'red':
+                    points_sum*=5
+                elif color == 'blue':
+                    points_sum*=4
+                elif color == 'green':
+                    points_sum *= 3
+                elif color == 'yellow':
+                    points_sum*=2
+                break
+
+        return points_sum
 
     def remove_matching(self,tiles: list[Tile],board: Board):
         #usuwa kafelki jesli to mozliwe, zwraca ilosc punktow za ruch
