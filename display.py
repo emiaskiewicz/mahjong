@@ -1,13 +1,12 @@
 import os
 import pygame
-from ursina.color import white
 
 #kolory w notacji RGB
 BLACK = (0,0,0)
 WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
+RED = (201, 40, 12)
+GREEN = (34, 153, 8)
+BLUE = (8, 86, 163)
 
 #wielkosc kafelka pomniejszona o 10 px aby nakladaly sie one na siebie przy wyswietlaniu plaszy
 TILE_WIDTH, TILE_HEIGHT = 60, 80
@@ -128,7 +127,36 @@ def handle_click(screen,board,pos,highlited_tiles,logic):
             else:
                 continue
 
+def game_win_screen(screen, score, player_name):
+    font = pygame.font.Font(None, 50)
+    button_width, button_height = 400, 65
+    button_x = (screen.get_width() - button_width) // 2
+    button_y = (screen.get_height() - button_height) // 2 + 80
 
+    screen.fill((30, 30, 30))
+
+    title_text = font.render(f"You won, {player_name}!", True, WHITE)
+    screen.blit(title_text, (screen.get_width() // 2 - title_text.get_width() // 2, screen.get_height() // 2 - 100))
+
+    score_text = font.render(f"Your Score: {score}", True, WHITE)
+    screen.blit(score_text, (screen.get_width() // 2 - score_text.get_width() // 2, screen.get_height() // 2 - 40))
+
+    menu_button = pygame.Rect(button_x, button_y, button_width, button_height)
+    pygame.draw.rect(screen, GREEN, menu_button)
+
+    button_text = font.render("Go to main menu", True, WHITE)
+    screen.blit(button_text, (menu_button.x + (menu_button.width - button_text.get_width()) // 2,
+                              menu_button.y + (menu_button.height - button_text.get_height()) // 2))
+
+    restart_button = pygame.Rect(button_x, button_y + 80, button_width, button_height)
+    pygame.draw.rect(screen, RED, restart_button)
+
+    restart_text = font.render("Restart", True, WHITE)
+    screen.blit(restart_text, (restart_button.x + (restart_button.width - restart_text.get_width()) // 2,
+                               restart_button.y + (restart_button.height - restart_text.get_height()) // 2))
+
+    pygame.display.flip()
+    return menu_button, restart_button
 
 def draw_board(screen, board, highlited_tiles=[]):
     screen_width, screen_height = screen.get_size()
