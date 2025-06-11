@@ -10,12 +10,16 @@ class Board:
     tiles_dict: dict[Vector, Tile] = {}  # dostep do kafelkow po pozycji - wyszukiwanie O(1)
     tiles_list = []
 
-    def __init__(self, set_name):
+    def __init__(self,_set_name):
+        self.set_name=_set_name
+        self.load_board()
+
+    def load_board(self):
         with open(game_sets_path, mode="r", encoding="utf-8") as file:
             self.sets_data = json.load(file)
 
         for set in self.sets_data["sets"]:
-            if set["name"] == set_name:
+            if set["name"] == self.set_name:
                 while len(self.get_available_tiles())==0:
                     for pos in set["positions"]:
                         position = Vector(pos[0], pos[1], pos[2])
@@ -34,11 +38,14 @@ class Board:
         else:
             return f"Tile on position {_position} does not exists"
 
+    def reset_board(self):
+        self.tiles_dict.clear()
+        self.tiles_list.clear()
+
     def is_available(self, tile: Tile):
         pos = tile.position  # current tile position
         #jesli nie istnieje dana pozycja
         if pos not in self.tiles_dict:
-            print(f"{tile} does not exist")
             return False
         #jesli nad obecnym kafelkiem istnieje kafelek to od razu False
         if pos.above() in self.tiles_dict:
