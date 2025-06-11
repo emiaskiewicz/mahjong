@@ -3,18 +3,20 @@ from time import sleep
 import pygame.font
 from board import *
 from tile import *
+from players import CPU
 from display import (draw_board,handle_click,end_game_message, draw_hint_button,
                      draw_delete_button, no_hint_message,game_win_screen, draw_back_button)
 
+
 class Logic:
     selected_tiles = []
-    hint_tiles =[]
+    hint_tiles = []
 
     def __init__(self,player):
         self.player = player
         self.board = Board(self.player.get_gameSet())
 
-    def run_game_loop(self, screen):
+    def single_player_mode(self, screen):
         import pygame
         running = True
         clock = pygame.time.Clock()
@@ -33,8 +35,6 @@ class Logic:
             font = pygame.font.Font(None,36)
             points_text=font.render(f'Score: {self.player.points}',True,(255,255,255))
             screen.blit(points_text,(15,screen.get_height()-points_text.get_height()-15))
-
-
 
             if not self.any_valid_moves(self.board):
                 if self.board.get_board_size() == [0, 0]:
@@ -63,7 +63,6 @@ class Logic:
                                 waiting_for_click = False
                 continue
 
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -81,7 +80,83 @@ class Logic:
 
                     handle_click(screen, self.board, mouse_pos,self.selected_tiles,self)
 
-                # obsługa kliknięć itp. (opcjonalnie teraz)
+            draw_board(screen, self.board,self.selected_tiles)
+            pygame.display.flip()
+            clock.tick(60)
+
+    def cpu_vs_cpu_mode(self, screen):
+        import pygame
+        running = True
+        clock = pygame.time.Clock()
+        cpu1 = CPU("CPU 1",self)
+        cpu2 = CPU("CPU 2",self)
+        current_cpu = cpu1
+        #opoznienie zeby plansza miala czas sie zaladowac
+        pygame.time.delay(400)
+        draw_board(screen, self.board, self.selected_tiles)
+        pygame.display.flip()
+
+        while running:
+            screen.fill((30, 30, 30))
+
+            back_button_obj = draw_back_button(screen)
+
+            font = pygame.font.Font(None,36)
+            points1_text=font.render(f'Score: {cpu1.points}',True,(255,255,255))
+            screen.blit(points1_text,(15,screen.get_height()-points1_text.get_height()-15))
+            cpu1_text = font.render(f'CPU 1', True, (255, 255, 255))
+            screen.blit(cpu1_text, (15, screen.get_height() - cpu1_text.get_height() - points1_text.get_height() - 15))
+
+            points2_text = font.render(f'Score: {cpu2.points}', True, (255, 255, 255))
+            screen.blit(points2_text, (screen.get_width()-points2_text.get_width()-15,
+                                       screen.get_height() - points2_text.get_height() - 15))
+            cpu2_text = font.render(f'CPU 2', True, (255, 255, 255))
+            screen.blit(cpu2_text, (screen.get_width() - cpu2_text.get_width() -15, screen.get_height() - cpu2_text.get_height() - points2_text.get_height() - 15))
+
+            if not self.any_valid_moves(self.board):
+                if self.board.get_board_size() == [0, 0]:
+                    winner = cpu1
+                    if cpu1.points<cpu2.points:
+                        winner = cpu2
+                    menu_button, restart_button = game_win_screen(screen, winner.points,
+                                                                  winner.player_name)
+                elif self.board.get_board_size()!=[0,0] and len(self.board.tiles_list)==2:
+                    print("remis")
+                else:
+                    quit_button, shuffle_button = end_game_message(screen)
+
+                waiting_for_click = True
+                while waiting_for_click:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            running = False
+                            waiting_for_click = False
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
+                            mouse_pos = pygame.mouse.get_pos()
+                            if self.handle_win_screen_click(mouse_pos,menu_button,restart_button):
+                                running = False
+                                waiting_for_click = False
+                            elif self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
+                                running = False
+                                waiting_for_click = False
+                            else:
+                                waiting_for_click = False
+                continue
+            else:
+                moved = self.remove_tiles_ai(current_cpu,screen)
+                if moved:
+                    current_cpu = cpu2 if current_cpu == cpu1 else cpu1
+                    pygame.time.delay(500)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if self.handle_back_click(mouse_pos,back_button_obj):
+                        running=False
+
+                    handle_click(screen, self.board, mouse_pos,self.selected_tiles,self)
 
             draw_board(screen, self.board,self.selected_tiles)
             pygame.display.flip()
@@ -219,6 +294,22 @@ class Logic:
         else:
             return 0
 
+    def remove_tiles_ai(self,cpu: CPU,screen):
+        move = cpu.select_move()
+        if move:
+            draw_board(screen,self.board, move)
+            pygame.display.flip()
+            pygame.time.delay(600)
+            score = self.remove_matching(move,self.board)
+            if score > 0:
+                print(f"Punkty: {score}")
+                cpu.add_points(score)
+                cpu.game.selected_tiles.clear()
+                return True
+            if score == 0:
+                cpu.game.selected_tiles.clear()
+        return False
+
     def any_valid_moves(self, board: Board):
         #sprawdza czy istnieje poprawny ruch
         accessible = board.get_available_tiles()
@@ -254,5 +345,11 @@ class Logic:
             self.player.add_points(-100)
         return random.choice(moves)
 
-    def solve(self):
-        pass
+    def game_mode(self,screen):
+        game_mode = self.player.get_gameMode()
+        if game_mode == "Single player":
+            self.single_player_mode(screen)
+        elif game_mode == "CPU vs CPU":
+            self.cpu_vs_cpu_mode(screen)
+        elif game_mode == "Player vs CPU":
+            print("human vs ai")
