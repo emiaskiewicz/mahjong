@@ -346,7 +346,7 @@ class Logic:
         return random.choice(moves)
 
     def game_mode(self,screen):
-        game_mode = self.player.get_gameMode()
+        game_mode = self.player.get_gamemode()
         if game_mode == "Single player":
             self.single_player_mode(screen)
         elif game_mode == "CPU vs CPU":

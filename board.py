@@ -6,31 +6,32 @@ import json
 game_sets_path = os.path.join("game_sets", "uklady.json")
 
 class Board:
-    sets_data = None
-    tiles_dict: dict[Vector, Tile] = {}  # dostep do kafelkow po pozycji - wyszukiwanie O(1)
-    tiles_list = []
-
     def __init__(self,_set_name):
         self.set_name=_set_name
+        self.sets_data = None
+        self.tiles_dict: dict[Vector, Tile] = {}  # dostep do kafelkow po pozycji - wyszukiwanie O(1)
+        self.tiles_list: list[Tile] =[]
         self.load_board()
 
     def load_board(self):
+        self.tiles_dict.clear()
+        self.tiles_list.clear()
         with open(game_sets_path, mode="r", encoding="utf-8") as file:
             self.sets_data = json.load(file)
 
         for set in self.sets_data["sets"]:
             if set["name"] == self.set_name:
-                while len(self.get_available_tiles())==0:
-                    for pos in set["positions"]:
-                        position = Vector(pos[0], pos[1], pos[2])
-                        tile = Tile(
-                            color=get_random_color(),
-                            figure=get_random_figure(),
-                            position=position
-                        )
-                        generate_tile_image(tile)
-                        self.tiles_dict[position] = tile
-                        self.tiles_list.append(tile)
+                #while len(self.get_available_tiles())==0:
+                for pos in set["positions"]:
+                    position = Vector(pos[0], pos[1], pos[2])
+                    tile = Tile(
+                        color=get_random_color(),
+                        figure=get_random_figure(),
+                        position=position
+                    )
+                    generate_tile_image(tile)
+                    self.tiles_dict[position] = tile
+                    self.tiles_list.append(tile)
 
     def find_on_board(self, _position):
         if self.tiles_dict.get(Vector(_position.x, _position.y, _position.z)):

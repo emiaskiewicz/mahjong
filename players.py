@@ -28,7 +28,10 @@ class Player:
     def get_gameSet(self):
         return self.set_name[0][0]
 
-    def get_gameMode(self):
+    def get_difficulty(self):
+        return self.difficulty[0][0]
+
+    def get_gamemode(self):
         return self.game_mode[0][0]
 
     def print_rules(self):
@@ -41,9 +44,7 @@ class Player:
     def reset_points(self):
         self.points=0
 
-    def save_rules(self,dict):
-        self.rules=dict
-        print(self.rules)
+
 
 class CPU(Player):
     chosen_tiles =[]
@@ -61,16 +62,17 @@ class CPU(Player):
         max_score = max(score for move,score in scores)
         best_moves = [move for move, score in scores if score == max_score]
 
-        if self.get_gameMode() == "easy":
+        difficulty = self.game.player.get_difficulty()
+        if difficulty == "easy":
             self.chosen_tiles = available_moves[0]
-        elif self.get_gameMode() == "normal":
+        elif difficulty == "normal":
             if random.randint(1,10) == 10:
                 self.chosen_tiles = random.choice(best_moves)
             else:
                 sorted_scores = sorted(scores,key=lambda x: x[1])
                 mid = len(sorted_scores)//2
                 self.chosen_tiles = sorted_scores[mid][0]
-        elif self.get_gameMode() =="hard":
+        elif difficulty =="hard":
             self.chosen_tiles = random.choice(best_moves)
         self.game.selected_tiles=self.chosen_tiles
         return self.chosen_tiles
