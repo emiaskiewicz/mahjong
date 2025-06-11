@@ -1,8 +1,8 @@
 import pygame
-import sys
 import pygame_menu
 from pygame_menu import themes
 import rules_and_logic
+from players import Player
 
 pygame.init()
 
@@ -11,72 +11,27 @@ WIDTH, HEIGHT = 1300, 700
 _volume = 100
 sets=[("Kopiec",1),("Odwrocony kopiec",2),("Test",3)]
 difficulties=[('easy','easy'),('normal','normal'),('hard','hard')]
-game_modes=[('Single player','Single player'),('vs Computer','vs Computer')]
+game_modes=[('Single player','Single player'),('CPU vs CPU','CPU vs CPU'),('Player vs CPU','Player vs CPU')]
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Mahjong Start")
 
 clock = pygame.time.Clock()
 
-
-class Player:
-    player_name='username'
-    game_mode = ' '
-    difficulty = ' '
-    set_name = ' '
-    points = 0
-
-    def __init__(self):
-        pass
-
-    def set_player_name(self,_new_name):
-        self.player_name=_new_name
-
-    def set_game_mode(self, _new_mode, _val):
-        self.game_mode = _new_mode
-        print(_val)
-
-    def set_difficulty(self,_new_diff,_val):
-        self.difficulty = _new_diff
-        print(_val)
-
-    def set_gameSet(self,_new_name,_val):
-        self.set_name = _new_name
-        print(_val)
-
-    def get_gameSet(self):
-        return self.set_name[0][0]
-
-    def print_rules(self):
-        return print(f"Info\nPlayer name: {self.player_name}\tGame mode: {self.game_mode}\t"
-                     f"Difficulty: {self.difficulty}\tGame set: {self.set_name}")
-
-    def add_points(self,points):
-        self.points+=points
-
-    def reset_points(self):
-        self.points=0
-
-    def save_rules(self,dict):
-        self.rules=dict
-        print(self.rules)
-
-
 player1=Player()
 
 def start_game():
     game = rules_and_logic.Logic(player1)
-    game.run_game_loop(screen)
+    game.game_mode(screen)
 
 def start_game_menu():
     game_menu=pygame_menu.Menu('Select game options:',WIDTH,HEIGHT,theme=themes.THEME_GREEN)
     game_menu.add.text_input('Name: ', default='username', maxchar=20, onchange=player1.set_player_name)
-    game_menu.add.selector('Select mode: ', default=0, items=game_modes, onchange=player1.set_game_mode)
-    game_menu.add.selector('Select difficulty level: ', default=0, items=difficulties, onchange=player1.set_difficulty)
+    game_menu.add.dropselect('Select mode: ', items=game_modes, onchange=player1.set_game_mode)
+    game_menu.add.dropselect('Select difficulty level: ', items=difficulties, onchange=player1.set_difficulty)
     game_menu.add.dropselect("Select game set: ", items=sets, onchange=player1.set_gameSet)
     game_data = game_menu.get_input_data()
     player1.save_rules(game_data)
     game_menu.add.button('Start the game', start_game)
-
 
     mainmenu._open(game_menu)
 
@@ -111,9 +66,3 @@ while True:
         mainmenu.draw(screen)
 
     pygame.display.update()
-
-
-
-
-#na koniec programu czyscic folder generated files???
-#moze zostawic do nastepnych programow jako pamiec podreczna???
