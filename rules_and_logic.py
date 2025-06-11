@@ -4,7 +4,7 @@ import pygame.font
 from board import *
 from tile import *
 from display import (draw_board,handle_click,end_game_message, draw_hint_button,
-                     draw_delete_button, no_hint_message,game_win_screen)
+                     draw_delete_button, no_hint_message,game_win_screen, draw_back_button)
 
 class Logic:
     selected_tiles = []
@@ -12,23 +12,29 @@ class Logic:
 
     def __init__(self,player):
         self.player = player
-        self.board = Board(player.get_gameSet())
+        self.board = Board(self.player.get_gameSet())
 
     def run_game_loop(self, screen):
         import pygame
         running = True
         clock = pygame.time.Clock()
-
+        #opoznienie zeby plansza miala czas sie zaladowac
+        pygame.time.delay(400)
+        draw_board(screen, self.board, self.selected_tiles)
+        pygame.display.flip()
 
         while running:
             screen.fill((30, 30, 30))
 
             hint_button_obj = draw_hint_button(screen)
             delete_button_obj = draw_delete_button(screen)
+            back_button_obj = draw_back_button(screen)
 
             font = pygame.font.Font(None,36)
             points_text=font.render(f'Score: {self.player.points}',True,(255,255,255))
-            screen.blit(points_text,(screen.get_width()-points_text.get_width()-15,15))
+            screen.blit(points_text,(15,screen.get_height()-points_text.get_height()-15))
+
+
 
             if not self.any_valid_moves(self.board):
                 if self.board.get_board_size() == [0, 0]:
@@ -70,6 +76,8 @@ class Logic:
                     if self.handle_delete_click(mouse_pos,delete_button_obj):
                         draw_board(screen,self.board,self.selected_tiles)
                         pygame.display.flip()
+                    if self.handle_back_click(mouse_pos,back_button_obj):
+                        running=False
 
                     handle_click(screen, self.board, mouse_pos,self.selected_tiles,self)
 
@@ -78,6 +86,12 @@ class Logic:
             draw_board(screen, self.board,self.selected_tiles)
             pygame.display.flip()
             clock.tick(60)
+
+    def reset_game(self):
+        self.player.reset_points()
+        self.selected_tiles.clear()
+        self.hint_tiles.clear()
+        self.board.reset_board()
 
     def handle_end_game_click(self, pos, quit_button, shuffle_button, board):
         if quit_button.collidepoint(pos):
@@ -89,14 +103,19 @@ class Logic:
             return False
         return False
 
+    def handle_back_click(self,pos,back_button):
+        if back_button.collidepoint(pos):
+            self.reset_game()
+            return True
+        return False
+
     def handle_win_screen_click(self,pos, menu_button,restart_button):
         if menu_button.collidepoint(pos):
             from main import mainmenu
             mainmenu._open()
             return True
         elif restart_button.collidepoint(pos):
-            self.player.reset_points()
-            #main.start_game_menu()
+            self.reset_game()
             return True
         return False
 
