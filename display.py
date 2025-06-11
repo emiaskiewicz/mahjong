@@ -59,6 +59,23 @@ def draw_delete_button(screen):
 
     return delete_button
 
+def draw_back_button(screen):
+    font = pygame.font.Font(None, 32)
+    button_width = 100
+    button_height = 50
+    button_x = screen.get_width() - 20 - button_width
+    button_y = 20
+
+    back_button = pygame.Rect(button_x, button_y, button_width, button_height)
+
+    pygame.draw.rect(screen, BLUE, back_button)
+
+    back_text = font.render("Back", True, WHITE)
+    screen.blit(back_text, (back_button.x + (back_button.width - back_text.get_width()) // 2,
+                            back_button.y + (back_button.height - back_text.get_height()) // 2))
+
+    return back_button
+
 def end_game_message(screen):
     button_width, button_height = 250, 50
     button_margin = 20
@@ -142,14 +159,14 @@ def game_win_screen(screen, score, player_name):
     screen.blit(score_text, (screen.get_width() // 2 - score_text.get_width() // 2, screen.get_height() // 2 - 40))
 
     menu_button = pygame.Rect(button_x, button_y, button_width, button_height)
-    pygame.draw.rect(screen, GREEN, menu_button)
+    pygame.draw.rect(screen, BLUE, menu_button)
 
     button_text = font.render("Go to main menu", True, WHITE)
     screen.blit(button_text, (menu_button.x + (menu_button.width - button_text.get_width()) // 2,
                               menu_button.y + (menu_button.height - button_text.get_height()) // 2))
 
     restart_button = pygame.Rect(button_x, button_y + 80, button_width, button_height)
-    pygame.draw.rect(screen, RED, restart_button)
+    pygame.draw.rect(screen, BLUE, restart_button)
 
     restart_text = font.render("Restart", True, WHITE)
     screen.blit(restart_text, (restart_button.x + (restart_button.width - restart_text.get_width()) // 2,
