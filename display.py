@@ -112,6 +112,32 @@ def end_game_message(screen):
 
     return quit_button, shuffle_button
 
+def tie_message(screen):
+    button_width, button_height = 250, 50
+    button_margin = 20
+    font = pygame.font.Font(None, 36)
+    window_width, window_height= 400, 200
+    window_x = (screen.get_width() - window_width) // 2
+    window_y = (screen.get_height() - window_height) // 2
+    screen.fill((30, 30, 30))
+
+    pygame.draw.rect(screen, WHITE, (window_x, window_y, window_width, window_height))
+    pygame.draw.rect(screen, BLACK, (window_x, window_y, window_width, window_height), 2)
+
+    text = font.render("Tie! No moves available!", True, BLACK)
+    screen.blit(text, (window_x + (window_width - text.get_width()) // 2, window_y + 20))
+
+    restart_button = pygame.Rect(window_x + (window_width-button_width)//2, window_y + window_height - button_margin - button_height, button_width, button_height)
+    pygame.draw.rect(screen, BLUE, restart_button)
+
+    restart_text = font.render("Restart", True, WHITE)
+    screen.blit(restart_text, (restart_button.x + (restart_button.width - restart_text.get_width()) // 2,
+                               restart_button.y + (restart_button.height - restart_text.get_height()) // 2))
+
+    pygame.display.flip()
+
+    return restart_button
+
 def get_screen_position(position,offset_x, offset_y):
     x = position.x * TILE_WIDTH - position.z * Z_OFFSET_X+offset_x
     y = position.y * TILE_HEIGHT - position.z * Z_OFFSET_Y+offset_y
@@ -152,10 +178,10 @@ def game_win_screen(screen, score, player_name):
 
     screen.fill((30, 30, 30))
 
-    title_text = font.render(f"You won, {player_name}!", True, WHITE)
+    title_text = font.render(f"{player_name} won!", True, WHITE)
     screen.blit(title_text, (screen.get_width() // 2 - title_text.get_width() // 2, screen.get_height() // 2 - 100))
 
-    score_text = font.render(f"Your Score: {score}", True, WHITE)
+    score_text = font.render(f"Score: {score}", True, WHITE)
     screen.blit(score_text, (screen.get_width() // 2 - score_text.get_width() // 2, screen.get_height() // 2 - 40))
 
     menu_button = pygame.Rect(button_x, button_y, button_width, button_height)
