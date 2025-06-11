@@ -21,17 +21,17 @@ class Player:
         self.difficulty = _new_diff
         print(_val)
 
-    def set_gameSet(self,_new_name,_val):
+    def set_game_set(self, _new_name, _val):
         self.set_name = _new_name
         print(_val)
 
-    def get_gameSet(self):
+    def get_game_set(self):
         return self.set_name[0][0]
 
     def get_difficulty(self):
         return self.difficulty[0][0]
 
-    def get_gamemode(self):
+    def get_game_mode(self):
         return self.game_mode[0][0]
 
     def print_rules(self):
@@ -44,6 +44,11 @@ class Player:
     def reset_points(self):
         self.points=0
 
+    def save_settings(self, game_data):
+        self.set_player_name(game_data['Name'])
+        self.set_game_mode(game_data['Game mode'], game_data['Game mode'])
+        self.set_difficulty(game_data['Difficulty'], game_data['Difficulty'])
+        self.set_game_set(game_data['Game set'], game_data['Game set'])
 
 
 class CPU(Player):
