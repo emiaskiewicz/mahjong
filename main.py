@@ -18,19 +18,22 @@ pygame.display.set_caption("Mahjong Start")
 clock = pygame.time.Clock()
 
 player1=Player()
+Game_menu= None
 
 def start_game():
+    game_data = game_menu.get_input_data()
+    print(game_data)
+    player1.save_settings(game_data)
     game = rules_and_logic.Logic(player1)
     game.game_mode(screen)
 
 def start_game_menu():
-    game_menu=pygame_menu.Menu('Select game options:',WIDTH,HEIGHT,theme=themes.THEME_GREEN)
-    game_menu.add.text_input('Name: ', default='username', maxchar=20, onchange=player1.set_player_name)
-    game_menu.add.dropselect('Select mode: ', items=game_modes, onchange=player1.set_game_mode)
-    game_menu.add.dropselect('Select difficulty level: ', items=difficulties, onchange=player1.set_difficulty)
-    game_menu.add.dropselect("Select game set: ", items=sets, onchange=player1.set_gameSet)
-    game_data = game_menu.get_input_data()
-    player1.save_rules(game_data)
+    global game_menu
+    game_menu=pygame_menu.Menu(title='Select game options:',width=WIDTH,height=HEIGHT,theme=themes.THEME_GREEN)
+    game_menu.add.text_input(title='Name: ', default='username', maxchar=20,textinput_id='Name',name='Name')
+    game_menu.add.dropselect(title='Select mode: ', items=game_modes,dropselect_id='Game mode',name='Game mode')
+    game_menu.add.dropselect(title='Select difficulty level: ', items=difficulties,dropselect_id='Difficulty',name='Difficulty')
+    game_menu.add.dropselect(title='Select game set: ', items=sets,dropselect_id='Game set',name='Game set')
     game_menu.add.button('Start the game', start_game)
 
     mainmenu._open(game_menu)
