@@ -29,7 +29,7 @@ def start_game():
 
 def start_game_menu():
     global game_menu
-    game_menu=pygame_menu.Menu(title='Select game options:',width=WIDTH,height=HEIGHT,theme=themes.THEME_GREEN)
+    game_menu=pygame_menu.Menu(title='Select game options:',width=WIDTH,height=HEIGHT,theme=themes.THEME_DARK)
     game_menu.add.text_input(title='Name: ', default='username', maxchar=20,textinput_id='Name',name='Name')
     game_menu.add.dropselect(title='Select mode: ', items=game_modes,dropselect_id='Game mode',name='Game mode')
     game_menu.add.dropselect(title='Select difficulty level: ', items=difficulties,dropselect_id='Difficulty',name='Difficulty')
@@ -39,7 +39,7 @@ def start_game_menu():
     mainmenu._open(game_menu)
 
 def creators_menu():
-    creators = pygame_menu.Menu('Creator of the game', WIDTH,HEIGHT,theme=themes.THEME_BLUE)
+    creators = pygame_menu.Menu('Creator of the game', WIDTH,HEIGHT,theme=themes.THEME_DARK)
     creators.add.label("Emilia Miaskiewicz")
     mainmenu._open(creators)
 
@@ -48,11 +48,11 @@ def change_volume(value):
     _volume = value
 
 def options_menu():
-    options = pygame_menu.Menu('Options', WIDTH, HEIGHT, theme=themes.THEME_BLUE)
+    options = pygame_menu.Menu('Options', WIDTH, HEIGHT, theme=themes.THEME_DARK)
     options.add.range_slider('Volume',default=_volume,range_values=[int(0),int(100)],increment=int(1),width=250,onchange=change_volume)
     mainmenu._open(options)
 
-mainmenu = pygame_menu.Menu('Welcome', WIDTH, HEIGHT, theme=themes.THEME_SOLARIZED)
+mainmenu = pygame_menu.Menu('Welcome', WIDTH, HEIGHT, theme=themes.THEME_DARK)
 mainmenu.add.button('Play', start_game_menu)
 mainmenu.add.button('Creator', creators_menu)
 mainmenu.add.button('Options', options_menu)
