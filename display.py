@@ -16,7 +16,8 @@ Z_OFFSET_X, Z_OFFSET_Y = 6, 6
 def draw_hint_button(screen):
     font = pygame.font.Font(None, 36)
     button_width,button_height = 100,50
-    button_x,button_y = 20,20
+    button_x = 20
+    button_y = (screen.get_height() - button_height) // 2
 
     hint_button = pygame.Rect(button_x, button_y, button_width, button_height)
 
@@ -47,7 +48,7 @@ def draw_delete_button(screen):
     button_width = 100
     button_height = 50
     button_x = screen.get_width() - 20 - button_width
-    button_y = screen.get_height() - 20 - button_height
+    button_y = (screen.get_height() - button_height)//2
 
     delete_button = pygame.Rect(button_x, button_y, button_width, button_height)
 
