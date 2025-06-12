@@ -170,6 +170,98 @@ class Logic:
             pygame.display.flip()
             clock.tick(60)
 
+    def player_vs_cpu_mode(self, screen):
+        import pygame
+        running = True
+        clock = pygame.time.Clock()
+        cpu = CPU("CPU",self)
+        current_player = random.choice((cpu,self.player))
+        #opoznienie zeby plansza miala czas sie zaladowac
+        pygame.time.delay(400)
+        draw_board(screen, self.board, self.selected_tiles)
+        pygame.display.flip()
+
+        while running:
+            screen.fill((30, 30, 30))
+
+            hint_button_obj = draw_hint_button(screen)
+            delete_button_obj = draw_delete_button(screen)
+            back_button_obj = draw_back_button(screen)
+
+            font = pygame.font.Font(None,36)
+            points_player_text=font.render(f'Score: {self.player.points}',True,WHITE)
+            screen.blit(points_player_text,(15,screen.get_height()-points_player_text.get_height()-15))
+            cpu1_text = font.render(f'{self.player.player_name}', True, WHITE)
+            screen.blit(cpu1_text, (15, screen.get_height() - cpu1_text.get_height() - points_player_text.get_height() - 15))
+
+            points_cpu_text = font.render(f'Score: {cpu.points}', True, WHITE)
+            screen.blit(points_cpu_text, (screen.get_width()-points_cpu_text.get_width()-15,
+                                       screen.get_height() - points_cpu_text.get_height() - 15))
+            cpu2_text = font.render(f'CPU 2', True, WHITE)
+            screen.blit(cpu2_text, (screen.get_width() - cpu2_text.get_width() -15, screen.get_height() - cpu2_text.get_height() - points_cpu_text.get_height() - 15))
+
+            turn_text = font.render(f'{current_player.player_name}`s turn',True,WHITE)
+            screen.blit(turn_text,(15,15))
+
+            if not self.any_valid_moves(self.board):
+                if self.board.get_board_size() == [0, 0]:
+                    winner = cpu
+                    if cpu.points<self.player.points:
+                        winner = self.player
+                    menu_button, restart_button = game_win_screen(screen, winner.points,
+                                                                  winner.player_name)
+                elif self.board.get_board_size()!=[0,0] and len(self.board.tiles_list)==2:
+                    tie_button = tie_message(screen)
+                else:
+                    quit_button, shuffle_button = end_game_message(screen)
+
+                waiting_for_click = True
+                while waiting_for_click:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            running = False
+                            waiting_for_click = False
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
+                            mouse_pos = pygame.mouse.get_pos()
+                            if self.handle_win_screen_click(mouse_pos,menu_button,restart_button):
+                                running = False
+                                waiting_for_click = False
+                            elif self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
+                                running = False
+                                waiting_for_click = False
+                            elif self.handle_tie_click(mouse_pos,tie_button):
+                                running = False
+                                waiting_for_click=False
+                            else:
+                                waiting_for_click = False
+                continue
+            elif current_player == cpu:
+                self.remove_tiles_ai(cpu,screen)
+                current_player = self.player
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if self.handle_hint_click(mouse_pos, hint_button_obj, screen):
+                        draw_board(screen, self.board, self.hint_tiles)
+                        pygame.display.flip()
+                        sleep(3)
+                    if self.handle_delete_click(mouse_pos, delete_button_obj):
+                        current_player = cpu
+                        pygame.time.delay(300)
+                        draw_board(screen, self.board, self.selected_tiles)
+                        pygame.display.flip()
+                    if self.handle_back_click(mouse_pos, back_button_obj):
+                        running = False
+
+                    handle_click(screen, self.board, mouse_pos,self.selected_tiles,self)
+
+            draw_board(screen, self.board,self.selected_tiles)
+            pygame.display.flip()
+            clock.tick(60)
+
     def reset_game(self):
         self.player.reset_points()
         self.selected_tiles.clear()
@@ -228,6 +320,7 @@ class Logic:
                     return True
                 if score == 0:
                     self.selected_tiles.clear()
+                    return False
         return False
 
     def handle_tie_click(self,pos,tie_but):
@@ -366,4 +459,4 @@ class Logic:
         elif game_mode == "CPU vs CPU":
             self.cpu_vs_cpu_mode(screen)
         elif game_mode == "Player vs CPU":
-            print("human vs ai")
+            self.player_vs_cpu_mode(screen)
