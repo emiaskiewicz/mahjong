@@ -53,6 +53,7 @@ def options_menu():
     mainmenu._open(options)
 
 mainmenu = pygame_menu.Menu('Welcome', WIDTH, HEIGHT, theme=themes.THEME_DARK)
+mainmenu.add.label('MAHJONG',font_size=90,align=pygame_menu.locals.ALIGN_CENTER)
 mainmenu.add.button('Play', start_game_menu)
 mainmenu.add.button('Creator', creators_menu)
 mainmenu.add.button('Options', options_menu)
