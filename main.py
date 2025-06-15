@@ -9,17 +9,18 @@ pygame.init()
 WIDTH, HEIGHT = 1300, 700
 
 _volume = 100
-sets=[("Kopiec",1),("Odwrocony kopiec",2),("Test",3)]
+sets=[("Heap",1),("Reversed heap",2),("Test set",3)]
 difficulties=[('easy','easy'),('normal','normal'),('hard','hard')]
 game_modes=[('Single player','Single player'),('CPU vs CPU','CPU vs CPU'),
             ('Player vs CPU','Player vs CPU'),('Single player CPU','Single player CPU')]
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Mahjong Start")
+pygame.display.set_caption("Mahjong")
 
 clock = pygame.time.Clock()
 
 player1=Player()
-Game_menu= None
+game_menu= None
+rules = None
 
 def start_game():
     game_data = game_menu.get_input_data()
@@ -41,15 +42,31 @@ def start_game_menu():
 
 def single_rules_menu():
     single_rules = pygame_menu.Menu('Singleplayer mode rules',WIDTH,HEIGHT,theme=themes.THEME_DARK)
-    single_rules.add.label("rules...")
-    mainmenu._open(single_rules)
+    single_rules.add.label("The goal of the game is to clear all tiles from the board.", max_char=-1)
+    single_rules.add.label("Tiles can be removed if they have at least two free sides", max_char=-1)
+    single_rules.add.label("and no tile placed on top of them.", max_char=-1)
+    single_rules.add.label("You can connect pairs or triplets of tiles with the same figure.", max_char=-1)
+    single_rules.add.label("Scoring depends on figure rarity and tile color.", max_char=-1)
+    single_rules.add.label("Combinations with the same color are rewarded with more points.", max_char=-1)
+    single_rules.add.label("A hint is available and costs 100 points.", max_char=-1)
+    single_rules.add.label("If only one tile of a specific figure remains,", max_char=-1)
+    single_rules.add.label("it will be removed automatically.", max_char=-1)
+    rules._open(single_rules)
 
 def multi_rules_menu():
     multi_rules = pygame_menu.Menu('Multiplayer mode rules',WIDTH,HEIGHT,theme=themes.THEME_DARK)
-    multi_rules.add.label("rules...")
-    mainmenu._open(multi_rules)
+    multi_rules.add.label("The goal is to clear the board and score more than your opponent.", max_char=-1)
+    multi_rules.add.label("Tiles must have at least two free sides and no tile above.", max_char=-1)
+    multi_rules.add.label("Players take turns removing one valid pair or triplet per turn.", max_char=-1)
+    multi_rules.add.label("All selected tiles must have the same figure.", max_char=-1)
+    multi_rules.add.label("Scoring is based on figure rarity and tile color.", max_char=-1)
+    multi_rules.add.label("Hints are available for 100 points.", max_char=-1)
+    multi_rules.add.label("If only one tile of a specific figure remains,", max_char=-1)
+    multi_rules.add.label("it will be removed automatically.", max_char=-1)
+    rules._open(multi_rules)
 
 def rules_menu():
+    global rules
     rules = pygame_menu.Menu('Rules',WIDTH,HEIGHT,theme=themes.THEME_DARK)
     rules.add.button("Singleplayer",single_rules_menu)
     rules.add.button("Multiplayer",multi_rules_menu)
