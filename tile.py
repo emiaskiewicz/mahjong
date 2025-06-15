@@ -109,6 +109,12 @@ def get_random_color():
 #funkcja do generowania wygladu kafelka,
 #pobiera czesciowe grafiki danych cech i sklada je w jedna grafike kafelka
 def generate_tile_image(tile):
+    out_name = tile.color + "_" + tile.figure + ".png"
+    out_path = os.path.join("generated_tiles", out_name)
+
+    if os.path.exists(out_path):
+        return
+
     colors_image_path = os.path.join("assets_images","colors",tile.color)+".png"
     figures_image_path = os.path.join("assets_images","figures",tile.figure)+".png"
     color_img = Image.open(colors_image_path).convert("RGBA")
@@ -118,6 +124,4 @@ def generate_tile_image(tile):
     y = 438 - figure_img.height // 2 - 28
     color_img.paste(figure_img, (x, y), figure_img)
     color_img = color_img.resize((70,90), Image.Resampling.LANCZOS)
-    out_name = tile.color + "_" + tile.figure + ".png"
-    out_path = os.path.join("generated_tiles",out_name)
     color_img.save(out_path)
