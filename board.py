@@ -3,7 +3,7 @@ import random
 import os
 import json
 
-game_sets_path = os.path.join("game_sets", "uklady.json")
+game_sets_path = os.path.join("game_sets", "sets.json")
 
 class Board:
     def __init__(self,_set_name):
