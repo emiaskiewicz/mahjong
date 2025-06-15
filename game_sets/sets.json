@@ -1,7 +1,7 @@
 {
     "sets":[
         {
-            "name": "Kopiec",
+            "name": "Heap",
             "levels": 4,
             "positions": [
                     [0,0,0],
@@ -263,7 +263,7 @@
                 ]
         },
         {
-            "name": "Odwrocony kopiec",
+            "name": "Reversed heap",
             "levels": 4,
             "positions":[
                 [0,0,0],
@@ -573,7 +573,7 @@
             ]
         },
         {
-            "name": "Test",
+            "name": "Test set",
             "levels": 3,
             "positions": [
                 [0, 0, 0],
