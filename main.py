@@ -11,7 +11,8 @@ WIDTH, HEIGHT = 1300, 700
 _volume = 100
 sets=[("Kopiec",1),("Odwrocony kopiec",2),("Test",3)]
 difficulties=[('easy','easy'),('normal','normal'),('hard','hard')]
-game_modes=[('Single player','Single player'),('CPU vs CPU','CPU vs CPU'),('Player vs CPU','Player vs CPU')]
+game_modes=[('Single player','Single player'),('CPU vs CPU','CPU vs CPU'),
+            ('Player vs CPU','Player vs CPU'),('Single player CPU','Single player CPU')]
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Mahjong Start")
 
@@ -38,9 +39,27 @@ def start_game_menu():
 
     mainmenu._open(game_menu)
 
+def single_rules_menu():
+    single_rules = pygame_menu.Menu('Singleplayer mode rules',WIDTH,HEIGHT,theme=themes.THEME_DARK)
+    single_rules.add.label("rules...")
+    mainmenu._open(single_rules)
+
+def multi_rules_menu():
+    multi_rules = pygame_menu.Menu('Multiplayer mode rules',WIDTH,HEIGHT,theme=themes.THEME_DARK)
+    multi_rules.add.label("rules...")
+    mainmenu._open(multi_rules)
+
+def rules_menu():
+    rules = pygame_menu.Menu('Rules',WIDTH,HEIGHT,theme=themes.THEME_DARK)
+    rules.add.button("Singleplayer",single_rules_menu)
+    rules.add.button("Multiplayer",multi_rules_menu)
+
+    mainmenu._open(rules)
+
 def creators_menu():
     creators = pygame_menu.Menu('Creator of the game', WIDTH,HEIGHT,theme=themes.THEME_DARK)
-    creators.add.label("Emilia Miaskiewicz")
+    creators.add.label('Creator of the game',font_size=75)
+    creators.add.label("Emilia Miaskiewicz",font_size=95)
     mainmenu._open(creators)
 
 def change_volume(value):
@@ -54,10 +73,11 @@ def options_menu():
 
 mainmenu = pygame_menu.Menu('Welcome', WIDTH, HEIGHT, theme=themes.THEME_DARK)
 mainmenu.add.label('MAHJONG',font_size=90,align=pygame_menu.locals.ALIGN_CENTER)
-mainmenu.add.button('Play', start_game_menu)
-mainmenu.add.button('Creator', creators_menu)
-mainmenu.add.button('Options', options_menu)
-mainmenu.add.button('Quit', pygame_menu.events.EXIT)
+mainmenu.add.button('Play', start_game_menu,font_size=40)
+mainmenu.add.button('Rules', rules_menu,font_size=40)
+mainmenu.add.button('Creator', creators_menu,font_size=40)
+mainmenu.add.button('Options', options_menu,font_size=40)
+mainmenu.add.button('Quit', pygame_menu.events.EXIT,font_size=40)
 
 while True:
     events = pygame.event.get()
