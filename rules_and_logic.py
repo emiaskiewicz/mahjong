@@ -30,6 +30,7 @@ class Logic:
             hint_button_obj = draw_hint_button(screen)
             delete_button_obj = draw_delete_button(screen)
             back_button_obj = draw_back_button(screen)
+            menu_button = restart_button = tie_button = quit_button = shuffle_button = None
 
             font = pygame.font.Font(None,36)
             points_text=font.render(f'Score: {self.player.points}',True,WHITE)
@@ -52,15 +53,17 @@ class Logic:
                             waiting_for_click = False
                         elif event.type == pygame.MOUSEBUTTONDOWN:
                             mouse_pos = pygame.mouse.get_pos()
-                            if self.handle_win_screen_click(mouse_pos,menu_button,restart_button):
-                                running = False
-                                waiting_for_click = False
-                            elif self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
-                                running = False
-                                waiting_for_click = False
-                            elif self.handle_tie_click(mouse_pos,tie_button):
-                                running = False
-                                waiting_for_click=False
+                            if menu_button is not None and restart_button is not None:
+                                if self.handle_win_screen_click(mouse_pos, menu_button, restart_button):
+                                    running = False
+                                    waiting_for_click = False
+                            elif quit_button is not None and shuffle_button is not None:
+                                if self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
+                                    waiting_for_click = False
+                            elif tie_button is not None:
+                                if self.handle_tie_click(mouse_pos, tie_button):
+                                    running = False
+                                    waiting_for_click = False
                             else:
                                 waiting_for_click = False
                 continue
@@ -102,6 +105,7 @@ class Logic:
             screen.fill((30, 30, 30))
 
             back_button_obj = draw_back_button(screen)
+            menu_button = restart_button = tie_button = quit_button = shuffle_button = None
 
             font = pygame.font.Font(None,36)
             points1_text=font.render(f'Score: {cpu1.points}',True,WHITE)
@@ -138,15 +142,17 @@ class Logic:
                             waiting_for_click = False
                         elif event.type == pygame.MOUSEBUTTONDOWN:
                             mouse_pos = pygame.mouse.get_pos()
-                            if self.handle_win_screen_click(mouse_pos,menu_button,restart_button):
-                                running = False
-                                waiting_for_click = False
-                            elif self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
-                                running = False
-                                waiting_for_click = False
-                            elif self.handle_tie_click(mouse_pos,tie_button):
-                                running = False
-                                waiting_for_click=False
+                            if menu_button is not None and restart_button is not None:
+                                if self.handle_win_screen_click(mouse_pos, menu_button, restart_button):
+                                    running = False
+                                    waiting_for_click = False
+                            elif quit_button is not None and shuffle_button is not None:
+                                if self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
+                                    waiting_for_click = False
+                            elif tie_button is not None:
+                                if self.handle_tie_click(mouse_pos, tie_button):
+                                    running = False
+                                    waiting_for_click = False
                             else:
                                 waiting_for_click = False
                 continue
@@ -187,6 +193,7 @@ class Logic:
             hint_button_obj = draw_hint_button(screen)
             delete_button_obj = draw_delete_button(screen)
             back_button_obj = draw_back_button(screen)
+            menu_button = restart_button = tie_button = quit_button = shuffle_button = None
 
             font = pygame.font.Font(None,36)
             points_player_text=font.render(f'Score: {self.player.points}',True,WHITE)
@@ -223,15 +230,17 @@ class Logic:
                             waiting_for_click = False
                         elif event.type == pygame.MOUSEBUTTONDOWN:
                             mouse_pos = pygame.mouse.get_pos()
-                            if self.handle_win_screen_click(mouse_pos,menu_button,restart_button):
-                                running = False
-                                waiting_for_click = False
-                            elif self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
-                                running = False
-                                waiting_for_click = False
-                            elif self.handle_tie_click(mouse_pos,tie_button):
-                                running = False
-                                waiting_for_click=False
+                            if menu_button is not None and restart_button is not None:
+                                if self.handle_win_screen_click(mouse_pos, menu_button, restart_button):
+                                    running = False
+                                    waiting_for_click = False
+                            elif quit_button is not None and shuffle_button is not None:
+                                if self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
+                                    waiting_for_click = False
+                            elif tie_button is not None:
+                                if self.handle_tie_click(mouse_pos, tie_button):
+                                    running = False
+                                    waiting_for_click = False
                             else:
                                 waiting_for_click = False
                 continue
@@ -262,6 +271,72 @@ class Logic:
             pygame.display.flip()
             clock.tick(60)
 
+    def single_player_cpu_mode(self, screen):
+        import pygame
+        running = True
+        clock = pygame.time.Clock()
+        cpu = CPU("CPU",self)
+        #opoznienie zeby plansza miala czas sie zaladowac
+        pygame.time.delay(500)
+        draw_board(screen, self.board, self.selected_tiles)
+        pygame.display.flip()
+
+        while running:
+            screen.fill((30, 30, 30))
+
+            back_button_obj = draw_back_button(screen)
+            menu_button = restart_button = tie_button = quit_button = shuffle_button = None
+
+            font = pygame.font.Font(None,36)
+            points_text=font.render(f'Score: {cpu.points}',True,WHITE)
+            screen.blit(points_text,(15,screen.get_height()-points_text.get_height()-15))
+
+            if not self.any_valid_moves(self.board):
+                if self.board.get_board_size() == [0, 0]:
+                    menu_button, restart_button = game_win_screen(screen, cpu.points,
+                                                                  cpu.player_name)
+                elif self.board.get_board_size()!=[0,0] and len(self.board.tiles_list)==2:
+                    tie_button = tie_message(screen)
+                else:
+                    quit_button, shuffle_button = end_game_message(screen)
+
+                waiting_for_click = True
+                while waiting_for_click:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            running = False
+                            waiting_for_click = False
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
+                            mouse_pos = pygame.mouse.get_pos()
+                            if menu_button is not None and restart_button is not None:
+                                if self.handle_win_screen_click(mouse_pos, menu_button, restart_button):
+                                    running = False
+                                    waiting_for_click = False
+                            elif quit_button is not None and shuffle_button is not None:
+                                if self.handle_end_game_click(mouse_pos, quit_button, shuffle_button, self.board):
+                                    waiting_for_click = False
+                            elif tie_button is not None:
+                                if self.handle_tie_click(mouse_pos, tie_button):
+                                    running = False
+                                    waiting_for_click = False
+                            else:
+                                waiting_for_click=False
+                continue
+
+            self.remove_tiles_ai(cpu,screen)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if self.handle_back_click(mouse_pos,back_button_obj):
+                        running=False
+
+            draw_board(screen, self.board,self.selected_tiles)
+            pygame.display.flip()
+            clock.tick(60)
+
     def reset_game(self):
         self.player.reset_points()
         self.selected_tiles.clear()
@@ -275,7 +350,7 @@ class Logic:
             return True
         elif shuffle_button.collidepoint(pos):
             board.shuffle_tiles()
-            return False
+            return True
         return False
 
     def handle_back_click(self,pos,back_button):
@@ -406,7 +481,7 @@ class Logic:
         if move:
             draw_board(screen,self.board, move)
             pygame.display.flip()
-            pygame.time.delay(2500)
+            pygame.time.delay(300) #zmienilam delay bo chce szybciej sprawdzac
             score = self.remove_matching(move,self.board)
             if score > 0:
                 print(f"Punkty: {score}")
@@ -460,3 +535,5 @@ class Logic:
             self.cpu_vs_cpu_mode(screen)
         elif game_mode == "Player vs CPU":
             self.player_vs_cpu_mode(screen)
+        elif game_mode == "Single player CPU":
+            self.single_player_cpu_mode(screen)
