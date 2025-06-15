@@ -33,12 +33,6 @@ class Board:
                     self.tiles_dict[position] = tile
                     self.tiles_list.append(tile)
 
-    def find_on_board(self, _position):
-        if self.tiles_dict.get(Vector(_position.x, _position.y, _position.z)):
-            return f"Tile on position {_position} exists"
-        else:
-            return f"Tile on position {_position} does not exists"
-
     def reset_board(self):
         self.tiles_dict.clear()
         self.tiles_list.clear()
