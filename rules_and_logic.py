@@ -35,6 +35,8 @@ class Logic:
             font = pygame.font.Font(None,36)
             points_text=font.render(f'Score: {self.player.points}',True,WHITE)
             screen.blit(points_text,(15,screen.get_height()-points_text.get_height()-15))
+            player_text = font.render(f'{self.player.player_name}', True, WHITE)
+            screen.blit(player_text,(15, screen.get_height() - player_text.get_height() - points_text.get_height() - 15))
 
             if not self.any_valid_moves(self.board):
                 if self.board.get_board_size() == [0, 0]:
@@ -198,8 +200,8 @@ class Logic:
             font = pygame.font.Font(None,36)
             points_player_text=font.render(f'Score: {self.player.points}',True,WHITE)
             screen.blit(points_player_text,(15,screen.get_height()-points_player_text.get_height()-15))
-            cpu1_text = font.render(f'{self.player.player_name}', True, WHITE)
-            screen.blit(cpu1_text, (15, screen.get_height() - cpu1_text.get_height() - points_player_text.get_height() - 15))
+            player_text = font.render(f'{self.player.player_name}', True, WHITE)
+            screen.blit(player_text, (15, screen.get_height() - player_text.get_height() - points_player_text.get_height() - 15))
 
             points_cpu_text = font.render(f'Score: {cpu.points}', True, WHITE)
             screen.blit(points_cpu_text, (screen.get_width()-points_cpu_text.get_width()-15,
@@ -290,6 +292,8 @@ class Logic:
             font = pygame.font.Font(None,36)
             points_text=font.render(f'Score: {cpu.points}',True,WHITE)
             screen.blit(points_text,(15,screen.get_height()-points_text.get_height()-15))
+            cpu1_text = font.render(f'CPU', True, WHITE)
+            screen.blit(cpu1_text, (15, screen.get_height() - cpu1_text.get_height() - points_text.get_height() - 15))
 
             if not self.any_valid_moves(self.board):
                 if self.board.get_board_size() == [0, 0]:
@@ -481,7 +485,7 @@ class Logic:
         if move:
             draw_board(screen,self.board, move)
             pygame.display.flip()
-            pygame.time.delay(300) #zmienilam delay bo chce szybciej sprawdzac
+            pygame.time.delay(2500)
             score = self.remove_matching(move,self.board)
             if score > 0:
                 print(f"Punkty: {score}")
