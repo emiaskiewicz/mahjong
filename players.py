@@ -50,7 +50,6 @@ class Player:
         self.set_difficulty(game_data['Difficulty'], game_data['Difficulty'])
         self.set_game_set(game_data['Game set'], game_data['Game set'])
 
-
 class CPU(Player):
     chosen_tiles =[]
 

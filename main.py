@@ -3,10 +3,11 @@ import pygame_menu
 from pygame_menu import themes
 import rules_and_logic
 from players import Player
+import sys
 
 pygame.init()
 
-WIDTH, HEIGHT = 1300, 700
+WIDTH, HEIGHT = 1280, 720
 
 _volume = 100
 sets=[("Heap",1),("Reversed heap",2),("Test set",3)]
@@ -100,7 +101,7 @@ while True:
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
-            exit()
+            sys.exit()
 
     if mainmenu.is_enabled():
         mainmenu.update(events)
